@@ -60,12 +60,18 @@ try:
         data = response.json()
         suhu = data.get("Temperature", "N/A")
         kelembapan = data.get("Humidity", "N/A")
+        uv_data = data.get("UVIndex", [0])  # ← Tambahkan ini
+        labels = data.get("Labels", [f"Data {i+1}" for i in range(len(uv_data))])  
     else:
         suhu = "N/A"
         kelembapan = "N/A"
+        uv_data = [0]
+        labels = ["No Data"]
 except Exception as e:
     suhu = "N/A"
     kelembapan = "N/A"
+    uv_data = [0]
+    labels = ["No Data"]
 
 # ----------------------------
 # Layout: 2 kolom besar (6:4)
@@ -95,8 +101,6 @@ with col_right:
 
     # Grafik UV
     st.markdown("### UV Index Over Time")
-    uv_data = [18, 26, 24, 34, 36]
-    labels = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"]
 
     fig, ax = plt.subplots(figsize=(7, 3))
     ax.plot(labels, uv_data, marker='o', color='black')
