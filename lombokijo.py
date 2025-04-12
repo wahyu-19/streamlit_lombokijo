@@ -52,7 +52,7 @@ st.markdown("""
 # ----------------------------
 # Ambil data suhu & kelembapan dari Flask API
 # ----------------------------
-FLASK_URL = "http://localhost:5000/latest"  # Ganti dengan URL Flask kamu jika di-deploy
+FLASK_URL = "http://10.75.5.234:5000"  # Ganti dengan URL Flask kamu jika di-deploy
 
 try:
     response = requests.get(FLASK_URL)
