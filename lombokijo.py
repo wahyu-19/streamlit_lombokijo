@@ -12,14 +12,18 @@ st.set_page_config(
 )
 
 # ----------------------------
-# Styling kustom
+# Styling kustom (termasuk background putih)
 # ----------------------------
 st.markdown("""
     <style>
+    body, .main, .block-container {
+        background-color: white !important;
+    }
     .big-title {
         font-size: 72px;
         font-weight: 900;
         margin-bottom: 0.5rem;
+        color: #111;
     }
     .description {
         font-size: 26px;
@@ -58,7 +62,7 @@ with col_left:
 
     image_path = "Blow n Glow.png"
     if os.path.exists(image_path):
-        st.image(image_path, width=450)  # Lebih besar dan proporsional
+        st.image(image_path, width=450)  # Ukuran lebih besar dan proporsional
     else:
         st.warning(f"⚠️ Gambar tidak ditemukan di path: {image_path}")
 
@@ -73,7 +77,7 @@ with col_right:
     uv_data = [18, 26, 24, 34, 36]
     labels = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"]
 
-    fig, ax = plt.subplots(figsize=(7, 3.2))  # Lebar dan tinggi lebih besar
+    fig, ax = plt.subplots(figsize=(7, 3.2))
     ax.plot(labels, uv_data, marker='o', color='black')
     ax.set_ylim([0, 40])
     ax.set_title("")
