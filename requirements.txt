@@ -1,3 +1,2 @@
-streamlit
-matplotlib.pyplot
-os
+streamlit>=1.25.0
+matplotlib>=3.5.0
