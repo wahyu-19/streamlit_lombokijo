@@ -1,7 +1,7 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import os
-import paho.mqtt.client as mqtt
+import requests
 
 # ----------------------------
 # Konfigurasi halaman
@@ -50,25 +50,22 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ----------------------------
-# MQTT Setup
+# Ambil data suhu & kelembapan dari Flask API
 # ----------------------------
-import time
+FLASK_URL = "http://localhost:5000/latest"  # Ganti dengan URL Flask kamu jika di-deploy
 
-# Global variable to store temperature value
-if "latest_suhu" not in st.session_state:
-    st.session_state.latest_suhu = "0"
-
-def on_message(client, userdata, msg):
-    st.session_state.latest_suhu = msg.payload.decode()
-
-# Initialize MQTT client (only once)
-if "mqtt_client_initialized" not in st.session_state:
-    client = mqtt.Client()
-    client.on_message = on_message
-    client.connect("broker.hivemq.com", 1883)
-    client.subscribe("suhu/rumah")
-    client.loop_start()
-    st.session_state.mqtt_client_initialized = True
+try:
+    response = requests.get(FLASK_URL)
+    if response.status_code == 200:
+        data = response.json()
+        suhu = data.get("Temperature", "N/A")
+        kelembapan = data.get("Humidity", "N/A")
+    else:
+        suhu = "N/A"
+        kelembapan = "N/A"
+except Exception as e:
+    suhu = "N/A"
+    kelembapan = "N/A"
 
 # ----------------------------
 # Layout: 2 kolom besar (6:4)
@@ -92,11 +89,9 @@ with col_left:
 # Kolom KANAN: Metrik + Grafik UV
 # ----------------------------
 with col_right:
-    # Metrik suhu real-time dari MQTT
-    st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span> {st.session_state.latest_suhu}°C</div>', unsafe_allow_html=True)
-
-    # Metrik kelembapan statis (atau bisa juga pakai MQTT jika tersedia)
-    st.markdown('<div class="metric-box"><span class="icon">💧</span> 70%</div>', unsafe_allow_html=True)
+    # Metrik suhu & kelembapan real-time dari Flask
+    st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span> {suhu}°C</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><span class="icon">💧</span> {kelembapan}%</div>', unsafe_allow_html=True)
 
     # Grafik UV
     st.markdown("### UV Index Over Time")
