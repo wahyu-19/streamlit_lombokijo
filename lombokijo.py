@@ -56,7 +56,7 @@ with col_left:
     st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
     st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
 
-    image_path = "gambar/Blow n Glow.png"
+    image_path = "Blow n Glow.png"
     if os.path.exists(image_path):
         st.image(image_path, width=450)  # Lebih besar dan proporsional
     else:
