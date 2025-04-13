@@ -126,7 +126,7 @@ with col_right:
     st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
 
-    st.markdown("### UV Index (Time Series)")
+    st.markdown("### UV Index")
     fig, ax = plt.subplots(figsize=(7, 3))
     ax.plot(list(labels), list(uv_data), marker='o', color='black')
     ax.set_ylim([0, 15])
