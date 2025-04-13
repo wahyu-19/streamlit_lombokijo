@@ -1,7 +1,18 @@
 import streamlit as st
 import matplotlib.pyplot as plt
+import paho.mqtt.client as mqtt
+import json
+from collections import deque
+import threading
 import os
-import requests
+import time
+
+# ----------------------------
+# Buffer data untuk grafik
+# ----------------------------
+uv_data = deque(maxlen=20)
+labels = deque(maxlen=20)
+suhu = kelembapan = "N/A"
 
 # ----------------------------
 # Konfigurasi halaman
@@ -13,7 +24,7 @@ st.set_page_config(
 )
 
 # ----------------------------
-# Styling kustom (termasuk background putih)
+# Styling kustom
 # ----------------------------
 st.markdown("""
     <style>
@@ -50,28 +61,32 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ----------------------------
-# Ambil data suhu & kelembapan dari Flask API
+# Fungsi Callback MQTT
 # ----------------------------
-FLASK_URL = "http://10.75.5.234:5000/latest"
+def on_message(client, userdata, msg):
+    global suhu, kelembapan
+    try:
+        data = json.loads(msg.payload.decode())
+        suhu = data.get("temperature", "N/A")
+        kelembapan = data.get("humidity", "N/A")
+        uv = data.get("uv", 0)
+        uv_data.append(uv)
+        labels.append(f"Data {len(uv_data)}")
+    except Exception as e:
+        print("❌ MQTT Error:", e)
 
-try:
-    response = requests.get(FLASK_URL)
-    if response.status_code == 200:
-        data = response.json()
-        suhu = data.get("Temperature", "N/A")
-        kelembapan = data.get("Humidity", "N/A")
-        uv_data = data.get("UVIndex", [0])  # ← Tambahkan ini
-        labels = data.get("Labels", [f"Data {i+1}" for i in range(len(uv_data))])  
-    else:
-        suhu = "N/A"
-        kelembapan = "N/A"
-        uv_data = [0]
-        labels = ["No Data"]
-except Exception as e:
-    suhu = "N/A"
-    kelembapan = "N/A"
-    uv_data = [0]
-    labels = ["No Data"]
+# ----------------------------
+# Setup MQTT Client
+# ----------------------------
+def start_mqtt():
+    client = mqtt.Client()
+    client.on_message = on_message
+    client.connect("192.168.1.100", 1883, 60)  # Ganti IP broker sesuai dengan broker MQTT yang dipakai Thonny
+    client.subscribe("sensor/data")  # Ganti topik jika perlu
+    client.loop_forever()
+
+# Jalankan MQTT di thread terpisah agar tidak memblokir UI Streamlit
+threading.Thread(target=start_mqtt, daemon=True).start()
 
 # ----------------------------
 # Layout: 2 kolom besar (6:4)
@@ -89,24 +104,26 @@ with col_left:
     if os.path.exists(image_path):
         st.image(image_path, width=500)
     else:
-        st.warning(f"⚠️ Gambar tidak ditemukan di path: {image_path}")
+        st.warning("⚠️ Gambar tidak ditemukan!")
 
 # ----------------------------
 # Kolom KANAN: Metrik + Grafik UV
 # ----------------------------
 with col_right:
-    # Metrik suhu & kelembapan real-time dari Flask
-    st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span> {suhu}°C</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="metric-box"><span class="icon">💧</span> {kelembapan}%</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
 
-    # Grafik UV
     st.markdown("### UV Index Over Time")
-
     fig, ax = plt.subplots(figsize=(7, 3))
-    ax.plot(labels, uv_data, marker='o', color='black')
+    ax.plot(list(labels), list(uv_data), marker='o', color='black')
     ax.set_ylim([0, 40])
     ax.set_ylabel("UV Index")
-    ax.set_title("")
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     st.pyplot(fig)
+
+# ----------------------------
+# Auto-refresh setiap 10 detik
+# ----------------------------
+time.sleep(10)
+st.experimental_rerun()
