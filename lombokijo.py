@@ -19,13 +19,6 @@ st.set_page_config(
 st_autorefresh(interval=10_000, key="refresh")  # ✅ ganti time.sleep + rerun
 
 # ----------------------------
-# Buffer data untuk grafik
-# ----------------------------
-uv_data = deque(maxlen=20)
-labels = deque(maxlen=20)
-suhu = kelembapan = "N/A"
-
-# ----------------------------
 # Styling kustom
 # ----------------------------
 st.markdown("""
