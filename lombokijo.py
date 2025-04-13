@@ -1,11 +1,8 @@
 import streamlit as st
 import matplotlib.pyplot as plt
+import requests
 import os
-import json
-from collections import deque
-import threading
-import paho.mqtt.client as mqtt
-from streamlit_autorefresh import st_autorefresh  # ✅ tambahan
+from streamlit_autorefresh import st_autorefresh
 
 # ----------------------------
 # HARUS PALING ATAS: Konfigurasi halaman
@@ -66,34 +63,50 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ----------------------------
-# Fungsi Callback MQTT
+# Konfigurasi Ubidots
 # ----------------------------
-def on_message(client, userdata, msg):
-    global suhu, kelembapan
+UBIDOTS_ENDPOINT = "http://industrial.api.ubidots.com/api/v1.6/devices/esp32/"
+header_ubidots = {
+    "Content-Type": "application/json",
+    "X-Auth-Token": "BBUS-GoISeXoa4YzzhmEgmoKUVgiv2Y3n9H"
+}
+
+# ----------------------------
+# Fungsi Ambil Data
+# ----------------------------
+def get_variable_value(variable):
     try:
-        data = json.loads(msg.payload.decode())
-        suhu = data.get("temperature", "N/A")
-        kelembapan = data.get("humidity", "N/A")
-        uv = data.get("uv", 0)
-        uv_data.append(uv)
-        labels.append(f"Data {len(uv_data)}")
+        url = f"{UBIDOTS_ENDPOINT}{variable}/lv"
+        response = requests.get(url, headers=header_ubidots)
+        if response.status_code == 200:
+            return float(response.text)
+        else:
+            return "N/A"
     except Exception as e:
-        print("❌ MQTT Error:", e)
+        print("❌ Ubidots Error:", e)
+        return "N/A"
+
+def get_uv_history(limit=20):
+    try:
+        url = f"{UBIDOTS_ENDPOINT}uv/values?page_size={limit}"
+        response = requests.get(url, headers=header_ubidots)
+        if response.status_code == 200:
+            results = response.json().get("results", [])
+            uv_values = [item["value"] for item in results][::-1]  # dibalik biar urut
+            labels = [f"Data {i+1}" for i in range(len(uv_values))]
+            return uv_values, labels
+        else:
+            return [], []
+    except Exception as e:
+        print("❌ Ubidots History Error:", e)
+        return [], []
 
 # ----------------------------
-# Setup MQTT Client
+# Ambil data dari Ubidots
 # ----------------------------
-def start_mqtt():
-    client = mqtt.Client()
-    client.on_message = on_message
-    client.connect("broker.mqtt-dashboard.com", 1883, 60)
-    client.subscribe("tugas/sic6/stage3")
-    client.loop_forever()
-
-# Jalankan MQTT di thread terpisah agar tidak memblokir UI Streamlit
-if "mqtt_started" not in st.session_state:
-    threading.Thread(target=start_mqtt, daemon=True).start()
-    st.session_state["mqtt_started"] = True  # ✅ agar thread tidak dobel saat refresh
+suhu = get_variable_value("temperature")
+kelembapan = get_variable_value("humidity")
+uv_data, labels = get_uv_history()
 
 # ----------------------------
 # Layout: 2 kolom besar (6:4)
