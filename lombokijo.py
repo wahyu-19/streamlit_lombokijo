@@ -8,6 +8,15 @@ import paho.mqtt.client as mqtt
 from streamlit_autorefresh import st_autorefresh  # ✅ tambahan
 
 # ----------------------------
+# HARUS PALING ATAS: Konfigurasi halaman
+# ----------------------------
+st.set_page_config(
+    page_title="Blow n Glow",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
+# ----------------------------
 # Auto-refresh setiap 10 detik
 # ----------------------------
 st_autorefresh(interval=10_000, key="refresh")  # ✅ ganti time.sleep + rerun
@@ -18,15 +27,6 @@ st_autorefresh(interval=10_000, key="refresh")  # ✅ ganti time.sleep + rerun
 uv_data = deque(maxlen=20)
 labels = deque(maxlen=20)
 suhu = kelembapan = "N/A"
-
-# ----------------------------
-# Konfigurasi halaman
-# ----------------------------
-st.set_page_config(
-    page_title="Blow n Glow",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
 
 # ----------------------------
 # Styling kustom
