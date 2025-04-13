@@ -1,11 +1,11 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-import paho.mqtt.client as mqtt
+import os
 import json
+import time
 from collections import deque
 import threading
-import os
-import time
+import paho.mqtt.client as mqtt
 
 # ----------------------------
 # Buffer data untuk grafik
@@ -81,8 +81,8 @@ def on_message(client, userdata, msg):
 def start_mqtt():
     client = mqtt.Client()
     client.on_message = on_message
-    client.connect("192.168.1.100", 1883, 60)  # Ganti IP broker sesuai dengan broker MQTT yang dipakai Thonny
-    client.subscribe("sensor/data")  # Ganti topik jika perlu
+    client.connect("broker.mqtt-dashboard.com", 1883, 60)
+    client.subscribe("tugas/sic6/stage3")
     client.loop_forever()
 
 # Jalankan MQTT di thread terpisah agar tidak memblokir UI Streamlit
