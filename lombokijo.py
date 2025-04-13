@@ -1,90 +1,130 @@
 import streamlit as st
 import matplotlib.pyplot as plt
+import os
+import json
 from collections import deque
 import threading
 import paho.mqtt.client as mqtt
-import json
+from streamlit_autorefresh import st_autorefresh  # ✅ tambahan
 
 # ----------------------------
-# Buffer data
+# Auto-refresh setiap 10 detik
 # ----------------------------
-temp1_data = deque(maxlen=20)
-temp2_data = deque(maxlen=20)
-hum1_data = deque(maxlen=20)
-hum2_data = deque(maxlen=20)
+st_autorefresh(interval=10_000, key="refresh")  # ✅ ganti time.sleep + rerun
+
+# ----------------------------
+# Buffer data untuk grafik
+# ----------------------------
+uv_data = deque(maxlen=20)
 labels = deque(maxlen=20)
-
-latest_temp1 = latest_temp2 = "N/A"
-latest_hum1 = latest_hum2 = "N/A"
+suhu = kelembapan = "N/A"
 
 # ----------------------------
-# MQTT Callback
+# Konfigurasi halaman
+# ----------------------------
+st.set_page_config(
+    page_title="Blow n Glow",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
+# ----------------------------
+# Styling kustom
+# ----------------------------
+st.markdown("""
+    <style>
+    body, .main, .block-container {
+        background-color: white !important;
+    }
+    .big-title {
+        font-size: 72px;
+        font-weight: 900;
+        margin-bottom: 0.5rem;
+        color: #111;
+    }
+    .description {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 2.5rem;
+    }
+    .metric-box {
+        background-color: #4CD964;
+        padding: 2rem;
+        border-radius: 12px;
+        text-align: center;
+        color: white;
+        font-size: 38px;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+    }
+    .icon {
+        font-size: 42px;
+        margin-right: 12px;
+        vertical-align: middle;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# ----------------------------
+# Fungsi Callback MQTT
 # ----------------------------
 def on_message(client, userdata, msg):
-    global latest_temp1, latest_temp2, latest_hum1, latest_hum2
-
+    global suhu, kelembapan
     try:
         data = json.loads(msg.payload.decode())
-        latest_temp1 = data.get("temp1", "N/A")
-        latest_temp2 = data.get("temp2", "N/A")
-        latest_hum1 = data.get("humidity1", "N/A")
-        latest_hum2 = data.get("humidity2", "N/A")
-
-        temp1_data.append(latest_temp1)
-        temp2_data.append(latest_temp2)
-        hum1_data.append(latest_hum1)
-        hum2_data.append(latest_hum2)
-        labels.append(f"Data {len(temp1_data)}")
-
+        suhu = data.get("temperature", "N/A")
+        kelembapan = data.get("humidity", "N/A")
+        uv = data.get("uv", 0)
+        uv_data.append(uv)
+        labels.append(f"Data {len(uv_data)}")
     except Exception as e:
         print("❌ MQTT Error:", e)
 
 # ----------------------------
-# MQTT Setup
+# Setup MQTT Client
 # ----------------------------
 def start_mqtt():
     client = mqtt.Client()
     client.on_message = on_message
     client.connect("broker.mqtt-dashboard.com", 1883, 60)
-    client.subscribe("/UNI494/rhenaamelia/data_sensor")
+    client.subscribe("tugas/sic6/stage3")
     client.loop_forever()
 
-threading.Thread(target=start_mqtt, daemon=True).start()
+# Jalankan MQTT di thread terpisah agar tidak memblokir UI Streamlit
+if "mqtt_started" not in st.session_state:
+    threading.Thread(target=start_mqtt, daemon=True).start()
+    st.session_state["mqtt_started"] = True  # ✅ agar thread tidak dobel saat refresh
 
 # ----------------------------
-# Streamlit Layout
+# Layout: 2 kolom besar (6:4)
 # ----------------------------
-st.set_page_config(page_title="Data Sensor", layout="wide")
-
-col1, col2 = st.columns(2)
-
-with col1:
-    st.metric("Temperature 1", f"{latest_temp1} °C")
-    st.metric("Humidity 1", f"{latest_hum1} %")
-with col2:
-    st.metric("Temperature 2", f"{latest_temp2} °C")
-    st.metric("Humidity 2", f"{latest_hum2} %")
+col_left, col_right = st.columns([6, 4])
 
 # ----------------------------
-# Chart
+# Kolom KIRI: Judul, Deskripsi, Gambar
 # ----------------------------
-st.markdown("### Grafik Sensor")
+with col_left:
+    st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
+    st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
 
-fig, ax = plt.subplots(figsize=(10, 4))
-ax.plot(labels, temp1_data, label="Temp 1", marker='o')
-ax.plot(labels, temp2_data, label="Temp 2", marker='x')
-ax.plot(labels, hum1_data, label="Humidity 1", linestyle='--')
-ax.plot(labels, hum2_data, label="Humidity 2", linestyle='--')
-
-ax.set_ylim([0, 100])
-ax.set_ylabel("Nilai Sensor")
-ax.set_title("Perubahan Data Sensor")
-ax.legend()
-ax.grid(True)
-st.pyplot(fig)
+    image_path = "Blow n Glow.png"
+    if os.path.exists(image_path):
+        st.image(image_path, width=500)
+    else:
+        st.warning("⚠️ Gambar tidak ditemukan!")
 
 # ----------------------------
-# Auto Refresh
+# Kolom KANAN: Metrik + Grafik UV
 # ----------------------------
-from streamlit_autorefresh import st_autorefresh
-st_autorefresh(interval=5000, key="sensor_autorefresh")
+with col_right:
+    st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
+
+    st.markdown("### UV Index Over Time")
+    fig, ax = plt.subplots(figsize=(7, 3))
+    ax.plot(list(labels), list(uv_data), marker='o', color='black')
+    ax.set_ylim([0, 40])
+    ax.set_ylabel("UV Index")
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    st.pyplot(fig)
