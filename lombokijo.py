@@ -16,7 +16,7 @@ st.set_page_config(
 # ----------------------------
 # Auto-refresh setiap 10 detik
 # ----------------------------
-st_autorefresh(interval=10_000, key="refresh")
+st_autorefresh(interval=10_000, key="refresh")  # ✅ ganti time.sleep + rerun
 
 # ----------------------------
 # Styling kustom
@@ -107,25 +107,31 @@ uv_data, labels = get_uv_history()
 col_left, col_right = st.columns([6, 4])
 
 # ----------------------------
-# Kolom KIRI: Judul, Deskripsi, Video berdasarkan UV
+# Kolom KIRI: Judul, Deskripsi, Video dinamis
 # ----------------------------
 with col_left:
     st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
     st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
 
-    video_path = "Animasi Dingin.mp4"  # default video
+    # Pilih video berdasarkan UV index
+    video_path = "Animasi Dingin.mp4"  # default
 
     if uv_data:
-        uv_now = uv_data[-1]  # Ambil nilai UV terbaru
-
+        uv_now = uv_data[-1]
         if 3 <= uv_now <= 5:
             video_path = "Animasi Sedang.mp4"
         elif uv_now >= 6:
             video_path = "Animasi Panas.mp4"
-        # 0-2 sudah pakai default, jadi tidak perlu diubah
 
+    # Tampilkan video
     if os.path.exists(video_path):
-        st.video(video_path)
+        video_html = f"""
+        <video autoplay loop muted playsinline style="width: 100%; height: auto; background: none; outline: none;">
+            <source src="{video_path}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        """
+        st.markdown(video_html, unsafe_allow_html=True)
     else:
         st.warning(f"⚠️ Video {video_path} tidak ditemukan!")
 
