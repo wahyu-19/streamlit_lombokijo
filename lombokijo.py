@@ -124,8 +124,15 @@ with col_left:
             video_path = "Animasi Panas.mp4"
         # 0-2 sudah pakai default, jadi tidak perlu diubah
 
+    # Cek jika video sudah ada, dan pastikan autoplay
     if os.path.exists(video_path):
-        st.video(video_path)
+        video_html = f"""
+        <video autoplay loop muted playsinline style="width: 100%; height: auto;">
+            <source src="{video_path}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        """
+        st.markdown(video_html, unsafe_allow_html=True)
     else:
         st.warning(f"⚠️ Video {video_path} tidak ditemukan!")
 
