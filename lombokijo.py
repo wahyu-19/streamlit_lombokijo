@@ -115,22 +115,17 @@ with col_left:
 
     if uv_data:
         uv_now = uv_data[-1]  # Ambil nilai UV terbaru
-        video_path = ""
+        image_path = ""
 
         if uv_now <= 2:
-            video_path = "Animasi Dingin.mp4"
+            image_path = "dingin.png"
         elif 3 <= uv_now <= 5:
-            video_path = "Animasi Sedang.mp4"
+            image_path = "sedang.png"
         else:
-            video_path = "Animasi Panas.mp4"
-
-        if os.path.exists(video_path):
-            st.video(video_path)
-        else:
-            st.warning(f"⚠️ Video {video_path} tidak ditemukan!")
+            image_path = "panas.png"
     else:
         # Jika belum ada data UV, tampilkan gambar default
-        image_path = "Blow n Glow.png"
+        image_path = "dingin.png"
         if os.path.exists(image_path):
             st.image(image_path, width=500)
         else:
