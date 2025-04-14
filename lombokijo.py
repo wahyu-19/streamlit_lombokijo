@@ -107,27 +107,27 @@ uv_data, labels = get_uv_history()
 col_left, col_right = st.columns([6, 4])
 
 # ----------------------------
-# Kolom KIRI: Judul, Deskripsi, Video atau Gambar
+# Kolom KIRI: Judul, Deskripsi, Video berdasarkan UV
 # ----------------------------
 with col_left:
     st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
     st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
 
+    video_path = "Animasi Dingin.mp4"  # default video
+
     if uv_data:
         uv_now = uv_data[-1]  # Ambil nilai UV terbaru
-        video_path = ""
 
-        if uv_now <= 2:
-            video_path = "Animasi Dingin.mp4"
-        elif 3 <= uv_now <= 5:
+        if 3 <= uv_now <= 5:
             video_path = "Animasi Sedang.mp4"
-        else:
+        elif uv_now >= 6:
             video_path = "Animasi Panas.mp4"
+        # 0-2 sudah pakai default, jadi tidak perlu diubah
 
-        if os.path.exists(video_path):
-            st.video(video_path)
-        else:
-            st.warning(f"⚠️ Video {video_path} tidak ditemukan!")
+    if os.path.exists(video_path):
+        st.video(video_path)
+    else:
+        st.warning(f"⚠️ Video {video_path} tidak ditemukan!")
 
 # ----------------------------
 # Kolom KANAN: Metrik + Grafik UV
