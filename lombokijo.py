@@ -16,7 +16,7 @@ st.set_page_config(
 # ----------------------------
 # Auto-refresh setiap 10 detik
 # ----------------------------
-st_autorefresh(interval=10_000, key="refresh")  # ✅ ganti time.sleep + rerun
+st_autorefresh(interval=10_000, key="refresh")
 
 # ----------------------------
 # Styling kustom
@@ -107,17 +107,27 @@ uv_data, labels = get_uv_history()
 col_left, col_right = st.columns([6, 4])
 
 # ----------------------------
-# Kolom KIRI: Judul, Deskripsi, Gambar
+# Kolom KIRI: Judul, Deskripsi, Video atau Gambar
 # ----------------------------
 with col_left:
     st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
     st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
 
-    image_path = "Blow n Glow.png"
-    if os.path.exists(image_path):
-        st.image(image_path, width=500)
-    else:
-        st.warning("⚠️ Gambar tidak ditemukan!")
+    if uv_data:
+        uv_now = uv_data[-1]  # Ambil nilai UV terbaru
+        video_path = ""
+
+        if uv_now <= 2:
+            video_path = "Animasi Dingin.mp4"
+        elif 3 <= uv_now <= 5:
+            video_path = "Animasi Sedang.mp4"
+        else:
+            video_path = "Animasi Panas.mp4"
+
+        if os.path.exists(video_path):
+            st.video(video_path)
+        else:
+            st.warning(f"⚠️ Video {video_path} tidak ditemukan!")
 
 # ----------------------------
 # Kolom KANAN: Metrik + Grafik UV
