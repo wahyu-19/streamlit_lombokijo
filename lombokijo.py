@@ -124,23 +124,16 @@ with col_left:
             video_path = "Animasi Panas.mp4"
         # 0-2 sudah pakai default, jadi tidak perlu diubah
 
-    # Pastikan video dimulai dengan autoplay tanpa suara
     if os.path.exists(video_path):
-        video_html = f"""
-        <video autoplay loop muted playsinline style="width: 100%; height: auto; background: none; outline: none;">
-            <source src="{video_path}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        """
-        st.markdown(video_html, unsafe_allow_html=True)
+        st.video(video_path)
     else:
-        st.warning(f"⚠️ Video {video_path} tidak ditemukan!")
+        st.warning(f"⚠ Video {video_path} tidak ditemukan!")
 
 # ----------------------------
 # Kolom KANAN: Metrik + Grafik UV
 # ----------------------------
 with col_right:
-    st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><span class="icon">🌡</span>{suhu}°C</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
 
     st.markdown("### UV Index")
