@@ -1,4 +1,4 @@
-import streamlit as st
+ort streamlit as st
 import matplotlib.pyplot as plt
 import requests
 import os
@@ -125,14 +125,7 @@ with col_left:
         # 0-2 sudah pakai default, jadi tidak perlu diubah
 
     if os.path.exists(video_path):
-        # Menggunakan HTML5 Video Tag dengan autoplay, loop, dan muted
-        video_html = f"""
-        <video autoplay loop muted playsinline style="width: 100%; height: auto;">
-            <source src="{video_path}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        """
-        st.markdown(video_html, unsafe_allow_html=True)
+        st.video(video_path)
     else:
         st.warning(f"⚠️ Video {video_path} tidak ditemukan!")
 
