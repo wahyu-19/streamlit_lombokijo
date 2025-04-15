@@ -111,6 +111,13 @@ def get_latest_value(variable):
         return "N/A"
 
 # ----------------------------
+# Ambil nilai sensor terbaru
+# ----------------------------
+suhu = get_latest_value("temperature")
+kelembapan = get_latest_value("humidity")
+uv_now = get_latest_value("uv")
+
+# ----------------------------
 # TAMPILAN UTAMA
 # ----------------------------
 st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
