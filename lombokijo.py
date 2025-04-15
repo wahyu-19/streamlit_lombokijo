@@ -4,7 +4,7 @@ import os
 from streamlit_autorefresh import st_autorefresh
 
 # ----------------------------
-# HARUS PALING ATAS: Konfigurasi halaman
+# Konfigurasi halaman
 # ----------------------------
 st.set_page_config(
     page_title="Blow n Glow",
@@ -13,54 +13,49 @@ st.set_page_config(
 )
 
 # ----------------------------
-# Auto-refresh setiap 10 detik
+# Auto-refresh
 # ----------------------------
 st_autorefresh(interval=10_000, key="refresh")
 
 # ----------------------------
-# Styling kustom
+# Styling CSS responsif
 # ----------------------------
 st.markdown("""
     <style>
-    body, .main, .block-container {
+    html, body, .main, .block-container {
+        padding: 0 !important;
+        margin: 0 !important;
         background-color: white !important;
-        margin: 0;
-        padding: 0;
-        height: 100vh;  /* Mengatur tinggi agar konten mengisi layar */
+        overflow-x: hidden;
     }
-
-    /* Judul besar */
     .big-title {
-        font-size: 8vw;  /* Ukuran font responsif */
+        font-size: 64px;
         font-weight: 900;
-        margin-bottom: 1rem;
         color: #111;
+        margin-bottom: 0.25rem;
+        margin-top: 1rem;
         text-align: center;
-        margin-top: 10vh;  /* Memberi sedikit ruang di atas */
     }
-
-    /* Deskripsi */
     .description {
-        font-size: 4vw;
+        font-size: 18px;
         color: #333;
-        margin-top: 0;
-        margin-bottom: 1.5rem;
+        margin-top: -5px;
+        margin-bottom: 2rem;
         text-align: center;
+        padding: 0 10px;
     }
-
-    /* Box untuk metrik */
     .metric-box {
         background-color: white;
         width: 100%;
-        max-width: 400px;
-        height: 100px;
+        max-width: 300px;
+        height: 140px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        border-radius: 16px;
+        border-radius: 24px;
         color: #4CD964;
-        font-size: 4vw;
+        font-size: 28px;
         font-weight: 700;
         margin-bottom: 1rem;
         box-shadow: 0 0 15px rgba(76, 217, 100, 0.4);
@@ -68,57 +63,31 @@ st.markdown("""
         margin-left: auto;
         margin-right: auto;
     }
-
     .icon {
-        font-size: 6vw;
-        margin-right: 10px;
-        vertical-align: middle;
+        font-size: 36px;
+        margin-bottom: 8px;
     }
 
-    /* Responsif untuk layar kecil (HP) */
-    @media screen and (max-width: 768px) {
+    @media (max-width: 768px) {
         .big-title {
-            font-size: 10vw;
+            font-size: 42px;
         }
         .description {
-            font-size: 5vw;
+            font-size: 16px;
         }
         .metric-box {
-            width: 90%;
+            height: 120px;
+            font-size: 22px;
         }
-    }
-
-    /* Container flexbox untuk memastikan layout 2 kolom */
-    .container {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        flex-wrap: wrap;
-        height: 100%;  /* Pastikan container mengisi seluruh tinggi layar */
-        padding: 2rem 5%;
-        box-sizing: border-box;
-    }
-
-    .left-column, .right-column {
-        flex: 1;
-        min-width: 250px;
-        height: 100%;  /* Pastikan kolom kiri dan kanan mengisi tinggi layar */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;  /* Posisi elemen di tengah */
-        align-items: center;
-    }
-
-    /* Menjaga gambar tetap proporsional */
-    .image-box {
-        width: 80%;
-        height: auto;
+        .icon {
+            font-size: 30px;
+        }
     }
     </style>
 """, unsafe_allow_html=True)
 
 # ----------------------------
-# Konfigurasi Ubidots
+# Ambil data dari Ubidots
 # ----------------------------
 UBIDOTS_ENDPOINT = "http://industrial.api.ubidots.com/api/v1.6/devices/esp32/"
 header_ubidots = {
@@ -126,9 +95,6 @@ header_ubidots = {
     "X-Auth-Token": "BBUS-GoISeXoa4YzzhmEgmoKUVgiv2Y3n9H"
 }
 
-# ----------------------------
-# Fungsi Ambil Data
-# ----------------------------
 def get_variable_value(variable):
     try:
         url = f"{UBIDOTS_ENDPOINT}{variable}/lv"
@@ -141,52 +107,36 @@ def get_variable_value(variable):
         print("❌ Ubidots Error:", e)
         return "N/A"
 
-# ----------------------------
-# Ambil data dari Ubidots
-# ----------------------------
 suhu = get_variable_value("temperature")
 kelembapan = get_variable_value("humidity")
-uv_now = get_variable_value("uv")  # Langsung ambil nilai terakhir
+uv_now = get_variable_value("uv")
 
 # ----------------------------
-# Layout: 2 kolom besar (6:4)
+# TAMPILAN UTAMA
 # ----------------------------
-
-# Container flexbox untuk memastikan kolom kiri dan kanan responsif
-st.markdown('<div class="container">', unsafe_allow_html=True)
-
-# ----------------------------
-# Kolom KIRI: Judul, Deskripsi, Gambar
-# ----------------------------
-st.markdown('<div class="left-column">', unsafe_allow_html=True)
 st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
 st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
 
-image_path = ""
+col1, col2 = st.columns([1, 1])
 
-if isinstance(uv_now, (int, float)):
-    if uv_now <= 2:
-        image_path = "Sejuk.png"
-    elif 3 <= uv_now <= 5:
-        image_path = "sedang.png"
+with col1:
+    image_path = ""
+    if isinstance(uv_now, (int, float)):
+        if uv_now <= 2:
+            image_path = "Sejuk.png"
+        elif 3 <= uv_now <= 5:
+            image_path = "sedang.png"
+        else:
+            image_path = "panas banget.png"
     else:
-        image_path = "panas banget.png"
-else:
-    image_path = "Sejuk.png"
+        image_path = "Sejuk.png"
+    
+    if os.path.exists(image_path):
+        st.image(image_path, use_column_width=True)
+    else:
+        st.warning("⚠️ Gambar tidak ditemukan!")
 
-if os.path.exists(image_path):
-    st.image(image_path, use_column_width=True)  # Gambar mengikuti lebar kolom
-else:
-    st.warning("⚠️ Gambar tidak ditemukan!")
-st.markdown('</div>', unsafe_allow_html=True)
-
-# ----------------------------
-# Kolom KANAN: Metrik
-# ----------------------------
-st.markdown('<div class="right-column">', unsafe_allow_html=True)
-st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
-st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
-st.markdown(f'<div class="metric-box"><span class="icon">☀️</span>{uv_now}</div>', unsafe_allow_html=True)
-st.markdown('</div>', unsafe_allow_html=True)
-
-st.markdown('</div>', unsafe_allow_html=True)
+with col2:
+    st.markdown(f'<div class="metric-box"><div class="icon">🌡️</div>{suhu}°C</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><div class="icon">💧</div>{kelembapan}%</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><div class="icon">☀️</div>{uv_now}</div>', unsafe_allow_html=True)
