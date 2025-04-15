@@ -125,22 +125,6 @@ uv_now = get_latest_value("uv")
 wib = pytz.timezone('Asia/Jakarta')
 current_time = datetime.now(wib).strftime("%d %B %Y<br>%H:%M:%S")
 
-st.markdown(
-    f'''
-    <div style="
-        text-align: center;
-        font-size: 20px;
-        font-weight: 500;
-        color: #666;
-        margin-top: -5px;
-        font-family: 'Courier New', monospace;
-    ">
-        🕒 {current_time}
-    </div>
-    ''',
-    unsafe_allow_html=True
-)
-
 # ----------------------------
 # TAMPILAN UTAMA
 # ----------------------------
