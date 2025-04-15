@@ -24,8 +24,9 @@ st.markdown("""
     <style>
     body, .main, .block-container {
         background-color: white !important;
-        padding: 0;  /* Menghilangkan padding pada body dan container */
+        padding: 0;
         margin: 0;
+        height: 100vh;  /* Pastikan konten mengisi seluruh tinggi layar */
     }
 
     .big-title {
@@ -34,6 +35,7 @@ st.markdown("""
         margin-bottom: 1rem;
         color: #111;
         text-align: center;
+        margin-top: 0;  /* Menghilangkan margin top untuk posisi lebih atas */
     }
 
     .description {
@@ -46,8 +48,8 @@ st.markdown("""
 
     .metric-box {
         background-color: white;
-        width: 100%;  /* Box memenuhi lebar kolom */
-        max-width: 350px;  /* Lebar maksimal box */
+        width: 100%;
+        max-width: 350px;
         height: 100px;
         display: flex;
         flex-direction: column;
@@ -55,7 +57,7 @@ st.markdown("""
         justify-content: center;
         border-radius: 16px;
         color: #4CD964;
-        font-size: 5vw;  /* Ukuran font responsif berdasarkan lebar layar */
+        font-size: 5vw;
         font-weight: 700;
         margin-bottom: 1rem;
         box-shadow: 0 0 10px rgba(76, 217, 100, 0.4);
@@ -73,28 +75,40 @@ st.markdown("""
     /* Responsif untuk layar kecil (HP) */
     @media screen and (max-width: 768px) {
         .big-title {
-            font-size: 10vw;  /* Ukuran font lebih besar pada layar kecil */
+            font-size: 10vw;
         }
         .description {
-            font-size: 4.5vw;  /* Menyesuaikan ukuran font pada perangkat kecil */
+            font-size: 4.5vw;
         }
         .metric-box {
-            width: 90%;  /* Menyesuaikan box agar lebih kecil pada layar kecil */
+            width: 90%;
         }
     }
 
-    /* Memastikan layout tetap seimbang */
+    /* Container untuk memastikan layout 2 kolom */
     .container {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         flex-wrap: wrap;
-        gap: 20px;
-        margin-top: 2rem;
+        height: 100%;  /* Pastikan container mengisi seluruh tinggi layar */
+        padding: 2rem 5%;
     }
 
     .left-column, .right-column {
         flex: 1;
-        min-width: 300px;  /* Menjaga ukuran minimal agar tetap proporsional */
+        min-width: 300px;
+        height: 100%;  /* Pastikan kolom kiri dan kanan mengisi tinggi layar */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;  /* Posisi elemen di tengah */
+        align-items: center;
+    }
+
+    /* Menjaga gambar dan metrik tetap proporsional */
+    .image-box {
+        width: 80%;
+        height: auto;
     }
     </style>
 """, unsafe_allow_html=True)
