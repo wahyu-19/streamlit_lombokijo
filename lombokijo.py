@@ -31,12 +31,13 @@ st.markdown("""
     font-weight: 900;
     margin-bottom: 0.5rem;
     color: #111;
-    margin-top: -30px; /* << Tambahkan ini */
-    }   
+    margin-top: -50px;  /* Menurunkan nilai margin-top untuk mendekatkan teks ke atas */
+    }
+
     .description {
-        font-size: 28px;
-        color: #333;
-        margin-bottom: 2.5rem;
+      font-size: 28px;
+      color: #333;
+      margin-bottom: 1.5rem;  /* Mengurangi margin-bottom untuk menjaga keseimbangan */
     }
     .metric-box {
         background-color: white;
