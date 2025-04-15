@@ -33,13 +33,13 @@ st.markdown("""
         font-weight: 900;
         color: #111;
         margin-bottom: 0.25rem;
-        margin-top: 1rem;
+        margin-top: -50px;
         text-align: center;
     }
     .description {
         font-size: 18px;
         color: #333;
-        margin-top: -5px;
+        margin-top: -50px;
         margin-bottom: 2rem;
         text-align: center;
         padding: 0 10px;
