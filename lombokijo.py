@@ -25,41 +25,58 @@ st.markdown("""
     <style>
     body, .main, .block-container {
         background-color: white !important;
+        overflow-x: hidden;
     }
     .big-title {
-    font-size: 72px;
-    font-weight: 900;
-    margin-bottom: 0.5rem;
-    color: #111;
-    margin-top: -30px; /* << Tambahkan ini */
+        font-size: 4.5rem;
+        font-weight: 900;
+        margin-bottom: 0.5rem;
+        color: #111;
+        margin-top: -20px;
     }   
     .description {
-        font-size: 28px;
+        font-size: 1.5rem;
         color: #333;
-        margin-bottom: 2.5rem;
+        margin-bottom: 2rem;
     }
     .metric-box {
         background-color: white;
-        width: 500px;
-        height: 175px;
+        width: 100%;
+        max-width: 300px;
+        height: 150px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         border-radius: 24px;
         color: #4CD964;
-        font-size: 32px;
+        font-size: 1.8rem;
         font-weight: 700;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 0 15px rgba(76, 217, 100, 0.4);
+        margin-bottom: 1rem;
+        box-shadow: 0 0 12px rgba(76, 217, 100, 0.4);
         border: none;
         margin-left: auto;
         margin-right: auto;
     }
     .icon {
-        font-size: 42px;
-        margin-right: 12px;
-        vertical-align: middle;
+        font-size: 2.2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Responsive tweaks */
+    @media screen and (max-width: 768px) {
+        .big-title {
+            font-size: 2.5rem;
+            text-align: center;
+        }
+        .description {
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        .metric-box {
+            height: auto;
+            padding: 1rem;
+        }
     }
     </style>
 """, unsafe_allow_html=True)
