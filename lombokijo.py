@@ -27,11 +27,12 @@ st.markdown("""
         background-color: white !important;
     }
     .big-title {
-        font-size: 72px;
-        font-weight: 900;
-        margin-bottom: 0.5rem;
-        color: #111;
-    }
+    font-size: 72px;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    color: #111;
+    margin-top: -30px; /* << Tambahkan ini */
+    }   
     .description {
         font-size: 28px;
         color: #333;
