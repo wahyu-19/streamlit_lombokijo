@@ -23,77 +23,62 @@ st_autorefresh(interval=10_000, key="refresh")
 # ----------------------------
 st.markdown("""
     <style>
-    html, body, .main, .block-container {
+    body, .main, .block-container {
         background-color: white !important;
-        padding: 2rem !important;
-        margin: 0;
-        max-width: 100%;
-        overflow-x: hidden;
+        padding: 2rem 3rem 2rem 3rem !important; /* padding atas, kanan, bawah, kiri */
     }
 
     .big-title {
-        font-size: 64px;
+        font-size: 56px;
         font-weight: 900;
+        margin-bottom: 0.5rem;
         color: #111;
-        margin-bottom: 0.25rem;
+        margin-top: 0px;
     }
 
     .description {
-        font-size: 24px;
+        font-size: 22px;
         color: #333;
         margin-bottom: 2rem;
     }
 
-    .metrics-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1.5rem;
-        justify-content: space-between;
-        margin-top: 2rem;
-    }
-
     .metric-box {
         background-color: white;
-        flex: 1 1 calc(33% - 1rem);
-        min-width: 220px;
-        max-width: 100%;
-        aspect-ratio: 1 / 1; /* Kotak persegi */
+        width: 100%;
+        max-width: 320px;
+        height: 100px;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        border-radius: 24px;
+        border-radius: 16px;
         color: #4CD964;
-        font-size: 28px;
+        font-size: 22px;
         font-weight: 700;
-        box-shadow: 0 0 15px rgba(76, 217, 100, 0.4);
-        padding: 1.5rem;
+        margin-bottom: 1.2rem;
+        box-shadow: 0 0 10px rgba(76, 217, 100, 0.3);
+        padding: 1rem;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .icon {
-        font-size: 44px;
-        margin-bottom: 0.6rem;
+        font-size: 32px;
+        margin-right: 10px;
+        vertical-align: middle;
     }
 
+    /* Responsif untuk layar kecil (HP) */
     @media screen and (max-width: 768px) {
         .big-title {
             font-size: 42px;
             text-align: center;
         }
-
         .description {
             font-size: 18px;
             text-align: center;
         }
-
-        .metrics-container {
-            flex-direction: column;
-            align-items: center;
-        }
-
         .metric-box {
-            width: 100%;
-            aspect-ratio: auto;
+            max-width: 100%;
         }
     }
     </style>
