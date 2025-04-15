@@ -24,12 +24,12 @@ st.markdown("""
     <style>
     body, .main, .block-container {
         background-color: white !important;
-        padding: 2% 5%;  /* Memberikan padding kiri-kanan-atas-bawah untuk responsif */
+        padding: 0;  /* Menghilangkan padding pada body dan container */
         margin: 0;
     }
 
     .big-title {
-        font-size: 8vw;  /* Menyesuaikan ukuran font dengan lebar layar */
+        font-size: 8vw;  /* Ukuran font responsif berdasarkan lebar layar */
         font-weight: 900;
         margin-bottom: 1rem;
         color: #111;
@@ -37,7 +37,7 @@ st.markdown("""
     }
 
     .description {
-        font-size: 3vw;
+        font-size: 3.5vw;
         color: #333;
         margin-top: -10px;
         margin-bottom: 1.5rem;
@@ -46,8 +46,8 @@ st.markdown("""
 
     .metric-box {
         background-color: white;
-        width: 100%;  /* Lebar penuh */
-        max-width: 400px;  /* Lebar maksimal */
+        width: 100%;  /* Box memenuhi lebar kolom */
+        max-width: 350px;  /* Lebar maksimal box */
         height: 100px;
         display: flex;
         flex-direction: column;
@@ -55,7 +55,7 @@ st.markdown("""
         justify-content: center;
         border-radius: 16px;
         color: #4CD964;
-        font-size: 5vw;  /* Menyesuaikan ukuran font dengan lebar layar */
+        font-size: 5vw;  /* Ukuran font responsif berdasarkan lebar layar */
         font-weight: 700;
         margin-bottom: 1rem;
         box-shadow: 0 0 10px rgba(76, 217, 100, 0.4);
@@ -73,14 +73,28 @@ st.markdown("""
     /* Responsif untuk layar kecil (HP) */
     @media screen and (max-width: 768px) {
         .big-title {
-            font-size: 10vw;  /* Menyesuaikan ukuran font pada layar kecil */
+            font-size: 10vw;  /* Ukuran font lebih besar pada layar kecil */
         }
         .description {
-            font-size: 4vw;
+            font-size: 4.5vw;  /* Menyesuaikan ukuran font pada perangkat kecil */
         }
         .metric-box {
-            width: 90%;  /* Menyesuaikan ukuran box pada layar kecil */
+            width: 90%;  /* Menyesuaikan box agar lebih kecil pada layar kecil */
         }
+    }
+
+    /* Memastikan layout tetap seimbang */
+    .container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 2rem;
+    }
+
+    .left-column, .right-column {
+        flex: 1;
+        min-width: 300px;  /* Menjaga ukuran minimal agar tetap proporsional */
     }
     </style>
 """, unsafe_allow_html=True)
@@ -119,12 +133,14 @@ uv_now = get_variable_value("uv")  # Langsung ambil nilai terakhir
 # ----------------------------
 # Layout: 2 kolom besar (6:4)
 # ----------------------------
-col_left, col_right = st.columns([6, 4])
+
+# Container flexbox untuk memastikan kolom kiri dan kanan responsif
+st.markdown('<div class="container">', unsafe_allow_html=True)
 
 # ----------------------------
 # Kolom KIRI: Judul, Deskripsi, Gambar
 # ----------------------------
-with col_left:
+st.markdown('<div class="left-column">', unsafe_allow_html=True)
     st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
     st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
 
@@ -141,14 +157,18 @@ with col_left:
         image_path = "Sejuk.png"
 
     if os.path.exists(image_path):
-        st.image(image_path, use_column_width=True)  # Menggunakan use_column_width agar gambar menyesuaikan lebar kolom
+        st.image(image_path, use_column_width=True)  # Gambar mengikuti lebar kolom
     else:
         st.warning("⚠️ Gambar tidak ditemukan!")
+st.markdown('</div>', unsafe_allow_html=True)
 
 # ----------------------------
 # Kolom KANAN: Metrik
 # ----------------------------
-with col_right:
+st.markdown('<div class="right-column">', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><span class="icon">☀️</span>{uv_now}</div>', unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
