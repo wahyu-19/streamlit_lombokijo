@@ -38,14 +38,16 @@ st.markdown("""
         margin-bottom: 2.5rem;
     }
     .metric-box {
-        background-color: #4CD964;
+        background-color: white;
         padding: 2rem;
         border-radius: 12px;
         text-align: center;
-        color: white;
+        color: #4CD964;
         font-size: 38px;
         font-weight: 700;
         margin-bottom: 1.5rem;
+        box-shadow: 0 0 15px rgba(76, 217, 100, 0.5);
+        border: 2px solid #4CD964;
     }
     .icon {
         font-size: 42px;
