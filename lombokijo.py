@@ -141,34 +141,34 @@ st.markdown('<div class="container">', unsafe_allow_html=True)
 # Kolom KIRI: Judul, Deskripsi, Gambar
 # ----------------------------
 st.markdown('<div class="left-column">', unsafe_allow_html=True)
-    st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
-    st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
+st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
+st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
 
-    image_path = ""
+image_path = ""
 
-    if isinstance(uv_now, (int, float)):
-        if uv_now <= 2:
-            image_path = "Sejuk.png"
-        elif 3 <= uv_now <= 5:
-            image_path = "sedang.png"
-        else:
-            image_path = "panas banget.png"
-    else:
+if isinstance(uv_now, (int, float)):
+    if uv_now <= 2:
         image_path = "Sejuk.png"
-
-    if os.path.exists(image_path):
-        st.image(image_path, use_column_width=True)  # Gambar mengikuti lebar kolom
+    elif 3 <= uv_now <= 5:
+        image_path = "sedang.png"
     else:
-        st.warning("⚠️ Gambar tidak ditemukan!")
+        image_path = "panas banget.png"
+else:
+    image_path = "Sejuk.png"
+
+if os.path.exists(image_path):
+    st.image(image_path, use_column_width=True)  # Gambar mengikuti lebar kolom
+else:
+    st.warning("⚠️ Gambar tidak ditemukan!")
 st.markdown('</div>', unsafe_allow_html=True)
 
 # ----------------------------
 # Kolom KANAN: Metrik
 # ----------------------------
 st.markdown('<div class="right-column">', unsafe_allow_html=True)
-    st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="metric-box"><span class="icon">☀️</span>{uv_now}</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="metric-box"><span class="icon">☀️</span>{uv_now}</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
