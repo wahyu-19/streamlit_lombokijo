@@ -1,4 +1,5 @@
 import streamlit as st
+import matplotlib.pyplot as plt
 import requests
 import os
 from streamlit_autorefresh import st_autorefresh
@@ -24,91 +25,43 @@ st.markdown("""
     <style>
     body, .main, .block-container {
         background-color: white !important;
-        padding: 0;
-        margin: 0;
-        height: 100vh;  /* Pastikan konten mengisi seluruh tinggi layar */
     }
-
     .big-title {
-        font-size: 8vw;  /* Ukuran font responsif berdasarkan lebar layar */
-        font-weight: 900;
-        margin-bottom: 1rem;
-        color: #111;
-        text-align: center;
-        margin-top: 0;  /* Menghilangkan margin top untuk posisi lebih atas */
+    font-size: 72px;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    color: #111;
+    margin-top: -50px;  /* Menurunkan nilai margin-top untuk mendekatkan teks ke atas */
     }
 
     .description {
-        font-size: 3.5vw;
-        color: #333;
-        margin-top: -10px;
-        margin-bottom: 1.5rem;
-        text-align: center;
+      font-size: 20px;
+      color: #333;
+      margin-top: -20px;
+      margin-bottom: 1.5rem;  /* Mengurangi margin-bottom untuk menjaga keseimbangan */
     }
-
     .metric-box {
         background-color: white;
-        width: 100%;
-        max-width: 350px;
-        height: 100px;
+        width: 500px;
+        height: 175px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        border-radius: 16px;
+        border-radius: 24px;
         color: #4CD964;
-        font-size: 5vw;
+        font-size: 32px;
         font-weight: 700;
-        margin-bottom: 1rem;
-        box-shadow: 0 0 10px rgba(76, 217, 100, 0.4);
+        margin-bottom: 1.5rem;
+        box-shadow: 0 0 15px rgba(76, 217, 100, 0.4);
         border: none;
         margin-left: auto;
         margin-right: auto;
     }
-
     .icon {
-        font-size: 6vw;
-        margin-right: 10px;
+        font-size: 42px;
+        margin-right: 12px;
         vertical-align: middle;
-    }
-
-    /* Responsif untuk layar kecil (HP) */
-    @media screen and (max-width: 768px) {
-        .big-title {
-            font-size: 10vw;
-        }
-        .description {
-            font-size: 4.5vw;
-        }
-        .metric-box {
-            width: 90%;
-        }
-    }
-
-    /* Container untuk memastikan layout 2 kolom */
-    .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        height: 100%;  /* Pastikan container mengisi seluruh tinggi layar */
-        padding: 2rem 5%;
-    }
-
-    .left-column, .right-column {
-        flex: 1;
-        min-width: 300px;
-        height: 100%;  /* Pastikan kolom kiri dan kanan mengisi tinggi layar */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;  /* Posisi elemen di tengah */
-        align-items: center;
-    }
-
-    /* Menjaga gambar dan metrik tetap proporsional */
-    .image-box {
-        width: 80%;
-        height: auto;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -147,42 +100,36 @@ uv_now = get_variable_value("uv")  # Langsung ambil nilai terakhir
 # ----------------------------
 # Layout: 2 kolom besar (6:4)
 # ----------------------------
-
-# Container flexbox untuk memastikan kolom kiri dan kanan responsif
-st.markdown('<div class="container">', unsafe_allow_html=True)
+col_left, col_right = st.columns([6, 4])
 
 # ----------------------------
 # Kolom KIRI: Judul, Deskripsi, Gambar
 # ----------------------------
-st.markdown('<div class="left-column">', unsafe_allow_html=True)
-st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
-st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
+with col_left:
+    st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
+    st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
 
-image_path = ""
+    image_path = ""
 
-if isinstance(uv_now, (int, float)):
-    if uv_now <= 2:
-        image_path = "Sejuk.png"
-    elif 3 <= uv_now <= 5:
-        image_path = "sedang.png"
+    if isinstance(uv_now, (int, float)):
+        if uv_now <= 2:
+            image_path = "Sejuk.png"
+        elif 3 <= uv_now <= 5:
+            image_path = "sedang.png"
+        else:
+            image_path = "panas banget.png"
     else:
-        image_path = "panas banget.png"
-else:
-    image_path = "Sejuk.png"
+        image_path = "Sejuk.png"
 
-if os.path.exists(image_path):
-    st.image(image_path, use_column_width=True)  # Gambar mengikuti lebar kolom
-else:
-    st.warning("⚠️ Gambar tidak ditemukan!")
-st.markdown('</div>', unsafe_allow_html=True)
+    if os.path.exists(image_path):
+        st.image(image_path, width=500)
+    else:
+        st.warning("⚠️ Gambar tidak ditemukan!")
 
 # ----------------------------
 # Kolom KANAN: Metrik
 # ----------------------------
-st.markdown('<div class="right-column">', unsafe_allow_html=True)
-st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
-st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
-st.markdown(f'<div class="metric-box"><span class="icon">☀️</span>{uv_now}</div>', unsafe_allow_html=True)
-st.markdown('</div>', unsafe_allow_html=True)
-
-st.markdown('</div>', unsafe_allow_html=True)
+with col_right:
+    st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><span class="icon">☀️</span>{uv_now}</div>', unsafe_allow_html=True)
