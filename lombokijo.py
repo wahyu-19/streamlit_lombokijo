@@ -31,7 +31,7 @@ st.markdown("""
     font-weight: 900;
     margin-bottom: 0.5rem;
     color: #111;
-    margin-top: -50px; /* << Tambahkan ini */
+    margin-top: -200px; /* << Tambahkan ini */
     }   
     .description {
         font-size: 20px;
