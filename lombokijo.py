@@ -3,7 +3,6 @@ import requests
 import os
 import base64
 import pandas as pd
-import matplotlib.pyplot as plt
 from streamlit_autorefresh import st_autorefresh
 
 # ----------------------------
@@ -111,36 +110,6 @@ def get_latest_value(variable):
         print("❌ Latest Value Error:", e)
         return "N/A"
 
-def get_historical_values(variable, limit=30):
-    try:
-        url = f"{UBIDOTS_ENDPOINT}{variable}/values?limit={limit}"
-        response = requests.get(url, headers=HEADERS)
-        if response.status_code == 200:
-            data = response.json()["results"]
-            df = pd.DataFrame(data)
-            df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms")
-            return df
-        else:
-            return pd.DataFrame()
-    except Exception as e:
-        print("❌ Historical Value Error:", e)
-        return pd.DataFrame()
-
-# ----------------------------
-# Ambil nilai terbaru dan historis
-# ----------------------------
-suhu = get_latest_value("temperature")
-kelembapan = get_latest_value("humidity")
-uv_now = get_latest_value("uv")
-uv_hist = get_historical_values("uv", limit=24)  # Ambil 24 data terakhir
-
-if isinstance(suhu, (int, float)):
-    suhu = f"{suhu:.2f}"
-if isinstance(kelembapan, (int, float)):
-    kelembapan = f"{kelembapan:.2f}"
-if isinstance(uv_now, (int, float)):
-    uv_now = f"{uv_now:.2f}"
-
 # ----------------------------
 # TAMPILAN UTAMA
 # ----------------------------
@@ -176,22 +145,7 @@ with col1:
     else:
         st.warning("⚠️ Gambar tidak ditemukan!")
 
-    # Grafik UV historis
-    if not uv_hist.empty:
-        st.subheader("Grafik Tren UV (24 Data Terakhir)")
-        fig, ax = plt.subplots()
-        ax.plot(uv_hist["timestamp"], uv_hist["value"], marker='o', color="#f39c12")
-        ax.set_xlabel("Waktu")
-        ax.set_ylabel("Indeks UV")
-        ax.set_title("Perubahan Indeks UV")
-        ax.grid(True)
-        fig.autofmt_xdate()
-        st.pyplot(fig)
-    else:
-        st.warning("⚠️ Data historis UV tidak tersedia.")
-
 with col2:
-    # Format nilai UV ke dua angka di belakang koma jika berupa angka
     formatted_uv = f"{uv_now:.2f}" if isinstance(uv_now, (int, float)) else uv_now
     formatted_suhu = f"{suhu:.1f}" if isinstance(suhu, (int, float)) else suhu
     formatted_kelembapan = f"{kelembapan:.1f}" if isinstance(kelembapan, (int, float)) else kelembapan
