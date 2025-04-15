@@ -22,65 +22,74 @@ st_autorefresh(interval=10_000, key="refresh")
 # ----------------------------
 st.markdown("""
     <style>
-    html, body, .main, .block-container {
-        padding: 0 !important;
-        margin: 0 !important;
+    /* Base styles */
+    body, .main, .block-container {
         background-color: white !important;
-        overflow-x: hidden;
     }
     .big-title {
-        font-size: 64px;
+        font-size: 7vw;
         font-weight: 900;
+        margin-bottom: 1rem;
         color: #111;
-        margin-bottom: 0.25rem;
-        margin-top: 1rem;
         text-align: center;
     }
     .description {
-        font-size: 18px;
+        font-size: 1.25rem;
         color: #333;
-        margin-top: -5px;
-        margin-bottom: 2rem;
         text-align: center;
-        padding: 0 10px;
+        margin-top: -0.5rem;
+        margin-bottom: 2rem;
+        padding: 0 1rem;
     }
     .metric-box {
         background-color: white;
-        width: 100%;
-        max-width: 300px;
-        height: 140px;
+        width: 90%;
+        max-width: 500px;
+        height: 150px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         border-radius: 24px;
         color: #4CD964;
-        font-size: 28px;
+        font-size: 1.75rem;
         font-weight: 700;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
         box-shadow: 0 0 15px rgba(76, 217, 100, 0.4);
         border: none;
         margin-left: auto;
         margin-right: auto;
     }
     .icon {
-        font-size: 36px;
-        margin-bottom: 8px;
+        font-size: 2rem;
+        margin-right: 0.5rem;
+        vertical-align: middle;
     }
 
-    @media (max-width: 768px) {
+    /* Responsive adjustments */
+    @media screen and (max-width: 768px) {
         .big-title {
-            font-size: 42px;
+            font-size: 10vw;
         }
         .description {
-            font-size: 16px;
+            font-size: 1rem;
         }
         .metric-box {
-            height: 120px;
-            font-size: 22px;
+            height: 130px;
+            font-size: 1.5rem;
         }
         .icon {
-            font-size: 30px;
+            font-size: 1.75rem;
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        .metric-box {
+            height: 120px;
+            font-size: 1.25rem;
+        }
+        .icon {
+            font-size: 1.5rem;
         }
     }
     </style>
