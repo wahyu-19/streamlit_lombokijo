@@ -230,27 +230,28 @@ with col2:
 
 
 # ----------------------------
-# Grafik Historis Sensor
+# Grafik Historis Sensor (4 data terakhir)
 # ----------------------------
 st.markdown("<hr style='margin:30px 0;'>", unsafe_allow_html=True)
-st.markdown("<div class='big-title' style='font-size:32px;'>📈 Grafik Sensor (Historis)</div>", unsafe_allow_html=True)
+st.markdown("<div class='big-title' style='font-size:32px;'>📈 Grafik Sensor (4 Data Terbaru)</div>", unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
     if not df_suhu.empty:
-        st.line_chart(df_suhu.set_index("Waktu"))
+        st.line_chart(df_suhu.tail(4).set_index("Waktu"))
     else:
         st.warning("Data suhu tidak tersedia.")
 
 with col2:
     if not df_kelembapan.empty:
-        st.line_chart(df_kelembapan.set_index("Waktu"))
+        st.line_chart(df_kelembapan.tail(4).set_index("Waktu"))
     else:
         st.warning("Data kelembapan tidak tersedia.")
 
 with col3:
     if not df_uv.empty:
-        st.line_chart(df_uv.set_index("Waktu"))
+        st.line_chart(df_uv.tail(4).set_index("Waktu"))
     else:
         st.warning("Data UV tidak tersedia.")
+
