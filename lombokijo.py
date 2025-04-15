@@ -123,7 +123,22 @@ uv_now = get_latest_value("uv")
 # Waktu Sekarang (WIB)
 # ----------------------------
 wib = pytz.timezone('Asia/Jakarta')
-current_time = datetime.now(wib).strftime("%H:%M:%S - %d %B %Y")
+
+st.title("Blow n Glow")
+
+# Placeholder agar bisa di-update tiap detik
+placeholder = st.empty()
+
+while True:
+    now = datetime.now(wib)
+    tanggal = now.strftime("%d %B %Y")
+    jam = now.strftime("%H:%M:%S")
+
+    with placeholder.container():
+        st.markdown(f"<h3 style='text-align: center;'>{tanggal}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h4 style='text-align: center; color: gray;'>{jam}</h4>", unsafe_allow_html=True)
+
+    time.sleep(1)
 
 # ----------------------------
 # TAMPILAN UTAMA
