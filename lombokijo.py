@@ -134,6 +134,13 @@ kelembapan = get_latest_value("humidity")
 uv_now = get_latest_value("uv")
 uv_hist = get_historical_values("uv", limit=24)  # Ambil 24 data terakhir
 
+if isinstance(suhu, (int, float)):
+    suhu = f"{suhu:.2f}"
+if isinstance(kelembapan, (int, float)):
+    kelembapan = f"{kelembapan:.2f}"
+if isinstance(uv_now, (int, float)):
+    uv_now = f"{uv_now:.2f}"
+
 # ----------------------------
 # TAMPILAN UTAMA
 # ----------------------------
