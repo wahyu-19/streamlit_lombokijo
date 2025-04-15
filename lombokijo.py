@@ -125,6 +125,13 @@ uv_now = get_latest_value("uv")
 wib = pytz.timezone('Asia/Jakarta')
 current_time = datetime.now(wib).strftime("%d %B %Y<br>%H:%M:%S")
 
+
+# ----------------------------
+# TAMPILAN UTAMA
+# ----------------------------
+st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
+st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
+
 # 👉 Jam digital WIB (tanggal di atas, jam di bawah)
 st.markdown(
     f'''
@@ -139,29 +146,6 @@ st.markdown(
         line-height: 1.6;
     ">
         🕒<br>{current_time}
-    </div>
-    ''',
-    unsafe_allow_html=True
-)
-
-# ----------------------------
-# TAMPILAN UTAMA
-# ----------------------------
-st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
-st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
-
-# 👉 Jam digital WIB
-st.markdown(
-    f'''
-    <div style="
-        text-align: center;
-        font-size: 20px;
-        font-weight: 500;
-        color: #666;
-        margin-top: -5px;
-        font-family: 'Courier New', monospace;
-    ">
-        🕒 {current_time}
     </div>
     ''',
     unsafe_allow_html=True
