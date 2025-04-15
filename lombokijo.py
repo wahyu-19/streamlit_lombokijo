@@ -122,7 +122,7 @@ with col_left:
         elif 3 <= uv_now <= 5:
             image_path = "sedang.png"
         else:
-            image_path = "panas.png"
+            image_path = "panas banget.png"
     else:
         # Jika belum ada data UV, tampilkan gambar default
         image_path = "dingin.png"
@@ -137,14 +137,4 @@ with col_left:
 with col_right:
     st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
-
-    st.markdown("### UV Index")
-    fig, ax = plt.subplots(figsize=(7, 3))
-    ax.plot(list(labels), list(uv_data), marker='o', color='black')
-    ax.set_ylim([0, 15])
-    ax.set_ylabel("UV Index")
-    ax.set_xlabel("Waktu")
-    ax.tick_params(axis='x', rotation=45)
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    st.pyplot(fig)
+    st.markdown(f'<div class="metric-box"><span class="icon">☀️</span>{UV Index}%</div>', unsafe_allow_html=True)
