@@ -131,7 +131,7 @@ with col1:
         image_path = "Sejuk.png"
     
     if os.path.exists(image_path):
-        st.image(image_path, use_column_width=True)
+        st.image(image_path, width=250)  # Ukuran gambar diperkecil agar sejajar dengan metric-box
     else:
         st.warning("⚠️ Gambar tidak ditemukan!")
 
