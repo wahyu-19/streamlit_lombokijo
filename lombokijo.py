@@ -1,10 +1,11 @@
 import streamlit as st
+import matplotlib.pyplot as plt
 import requests
 import os
 from streamlit_autorefresh import st_autorefresh
 
 # ----------------------------
-# Konfigurasi halaman
+# HARUS PALING ATAS: Konfigurasi halaman
 # ----------------------------
 st.set_page_config(
     page_title="Blow n Glow",
@@ -18,97 +19,47 @@ st.set_page_config(
 st_autorefresh(interval=10_000, key="refresh")
 
 # ----------------------------
-# Styling kustom (CSS)
+# Styling kustom
 # ----------------------------
 st.markdown("""
     <style>
     body, .main, .block-container {
         background-color: white !important;
-        padding: 2rem 3rem 2rem 3rem !important;
     }
-
-    .container-flex {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
+    .big-title {
+    font-size: 72px;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    color: #111;
+    margin-top: -30px; /* << Tambahkan ini */
+    }   
+    .description {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 2.5rem;
     }
-
-    .left-content {
-        flex: 1;
-        min-width: 300px;
-    }
-
-    .right-content {
-        flex: 1;
-        min-width: 300px;
+    .metric-box {
+        background-color: white;
+        width: 500px;
+        height: 175px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-    }
-
-    .big-title {
-        font-size: 56px;
-        font-weight: 900;
-        margin-bottom: 0.5rem;
-        color: #111;
-        margin-top: 0px;
-    }
-
-    .description {
-        font-size: 22px;
-        color: #333;
-        margin-bottom: 2rem;
-    }
-
-    .metric-box {
-        background-color: white;
-        width: 100%;
-        max-width: 300px;
-        height: 90px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 16px;
+        border-radius: 24px;
         color: #4CD964;
-        font-size: 22px;
+        font-size: 32px;
         font-weight: 700;
-        margin-bottom: 1.2rem;
-        box-shadow: 0 0 10px rgba(76, 217, 100, 0.3);
-        padding: 1rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 0 15px rgba(76, 217, 100, 0.4);
+        border: none;
+        margin-left: auto;
+        margin-right: auto;
     }
-
     .icon {
-        font-size: 28px;
-        margin-right: 10px;
+        font-size: 42px;
+        margin-right: 12px;
         vertical-align: middle;
-    }
-
-    img {
-        max-width: 100%;
-        height: auto;
-    }
-
-    @media screen and (max-width: 768px) {
-        .container-flex {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .big-title {
-            font-size: 42px;
-            text-align: center;
-        }
-
-        .description {
-            font-size: 18px;
-            text-align: center;
-        }
-
-        .metric-box {
-            max-width: 90%;
-        }
     }
     </style>
 """, unsafe_allow_html=True)
@@ -142,42 +93,41 @@ def get_variable_value(variable):
 # ----------------------------
 suhu = get_variable_value("temperature")
 kelembapan = get_variable_value("humidity")
-uv_now = get_variable_value("uv")
+uv_now = get_variable_value("uv")  # Langsung ambil nilai terakhir
 
 # ----------------------------
-# Layout Flex
+# Layout: 2 kolom besar (6:4)
 # ----------------------------
-st.markdown('<div class="container-flex">', unsafe_allow_html=True)
+col_left, col_right = st.columns([6, 4])
 
-# KIRI
-st.markdown('<div class="left-content">', unsafe_allow_html=True)
-st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
-st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
+# ----------------------------
+# Kolom KIRI: Judul, Deskripsi, Gambar
+# ----------------------------
+with col_left:
+    st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
+    st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
 
-# Tentukan gambar UV
-image_path = ""
-if isinstance(uv_now, (int, float)):
-    if uv_now <= 2:
-        image_path = "Sejuk.png"
-    elif 3 <= uv_now <= 5:
-        image_path = "sedang.png"
+    image_path = ""
+
+    if isinstance(uv_now, (int, float)):
+        if uv_now <= 2:
+            image_path = "Sejuk.png"
+        elif 3 <= uv_now <= 5:
+            image_path = "sedang.png"
+        else:
+            image_path = "panas banget.png"
     else:
-        image_path = "panas banget.png"
-else:
-    image_path = "Sejuk.png"
+        image_path = "Sejuk.png"
 
-# Tampilkan gambar
-if os.path.exists(image_path):
-    st.image(image_path, use_column_width=True)
-else:
-    st.warning("⚠️ Gambar tidak ditemukan!")
-st.markdown('</div>', unsafe_allow_html=True)
+    if os.path.exists(image_path):
+        st.image(image_path, width=500)
+    else:
+        st.warning("⚠️ Gambar tidak ditemukan!")
 
-# KANAN
-st.markdown('<div class="right-content">', unsafe_allow_html=True)
-st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
-st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
-st.markdown(f'<div class="metric-box"><span class="icon">☀️</span>{uv_now}</div>', unsafe_allow_html=True)
-st.markdown('</div>', unsafe_allow_html=True)
-
-st.markdown('</div>', unsafe_allow_html=True)  # Tutup container-flex
+# ----------------------------
+# Kolom KANAN: Metrik
+# ----------------------------
+with col_right:
+    st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><span class="icon">☀️</span>{uv_now}</div>', unsafe_allow_html=True)
