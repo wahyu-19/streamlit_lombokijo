@@ -89,7 +89,7 @@ st.markdown("""
 # ----------------------------
 # Ambil data dari Ubidots
 # ----------------------------
-UBIDOTS_ENDPOINT = "http://industrial.api.ubidots.com/api/v1.6/devices/esp32/values"
+UBIDOTS_ENDPOINT = "http://industrial.api.ubidots.com/api/v1.6/devices/esp32/"
 header_ubidots = {
     "Content-Type": "application/json",
     "X-Auth-Token": "BBUS-GoISeXoa4YzzhmEgmoKUVgiv2Y3n9H"
@@ -97,7 +97,7 @@ header_ubidots = {
 
 def get_variable_value(variable):
     try:
-        url = f"{UBIDOTS_ENDPOINT}{variable}/lv"
+        url = f"{UBIDOTS_ENDPOINT}{variable}/histori"
         response = requests.get(url, headers=header_ubidots)
         if response.status_code == 200:
             return float(response.text)
