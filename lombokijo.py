@@ -24,15 +24,15 @@ st.markdown("""
     <style>
     body, .main, .block-container {
         background-color: white !important;
-        padding: 2vw;  /* Memberikan padding kiri-kanan-atas-bawah responsif */
+        padding: 2% 5%;  /* Memberikan padding kiri-kanan-atas-bawah untuk responsif */
+        margin: 0;
     }
 
     .big-title {
-        font-size: 6vw;  /* Menyesuaikan ukuran font dengan lebar layar */
+        font-size: 8vw;  /* Menyesuaikan ukuran font dengan lebar layar */
         font-weight: 900;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
         color: #111;
-        margin-top: -40px;
         text-align: center;
     }
 
@@ -46,8 +46,8 @@ st.markdown("""
 
     .metric-box {
         background-color: white;
-        width: 90%;
-        max-width: 400px;  /* Mengatur ukuran maksimal agar tidak terlalu besar */
+        width: 100%;  /* Lebar penuh */
+        max-width: 400px;  /* Lebar maksimal */
         height: 100px;
         display: flex;
         flex-direction: column;
@@ -55,7 +55,7 @@ st.markdown("""
         justify-content: center;
         border-radius: 16px;
         color: #4CD964;
-        font-size: 5vw;  /* Ukuran font mengikuti layar */
+        font-size: 5vw;  /* Menyesuaikan ukuran font dengan lebar layar */
         font-weight: 700;
         margin-bottom: 1rem;
         box-shadow: 0 0 10px rgba(76, 217, 100, 0.4);
@@ -73,13 +73,13 @@ st.markdown("""
     /* Responsif untuk layar kecil (HP) */
     @media screen and (max-width: 768px) {
         .big-title {
-            font-size: 8vw;  /* Menyesuaikan ukuran font pada layar kecil */
+            font-size: 10vw;  /* Menyesuaikan ukuran font pada layar kecil */
         }
         .description {
             font-size: 4vw;
         }
         .metric-box {
-            max-width: 90%;  /* Menyesuaikan ukuran box pada layar kecil */
+            width: 90%;  /* Menyesuaikan ukuran box pada layar kecil */
         }
     }
     </style>
@@ -141,7 +141,7 @@ with col_left:
         image_path = "Sejuk.png"
 
     if os.path.exists(image_path):
-        st.image(image_path, width=500)
+        st.image(image_path, use_column_width=True)  # Menggunakan use_column_width agar gambar menyesuaikan lebar kolom
     else:
         st.warning("⚠️ Gambar tidak ditemukan!")
 
