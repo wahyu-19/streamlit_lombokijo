@@ -233,7 +233,7 @@ with col2:
 # Grafik Historis Sensor (4 data terakhir)
 # ----------------------------
 st.markdown("<hr style='margin:30px 0;'>", unsafe_allow_html=True)
-st.markdown("<div class='big-title' style='font-size:32px;'>📈 Grafik Sensor (4 Data Terbaru)</div>", unsafe_allow_html=True)
+st.markdown("<div class='big-title' style='font-size:32px;'>📈 Grafik Sensor</div>", unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns(3)
 
