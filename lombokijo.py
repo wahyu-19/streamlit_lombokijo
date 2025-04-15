@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import os
+import base64
 from streamlit_autorefresh import st_autorefresh
 
 # ----------------------------
@@ -131,7 +132,19 @@ with col1:
         image_path = "Sejuk.png"
     
     if os.path.exists(image_path):
-        st.image(image_path, width=450)  # Ukuran gambar diperkecil agar sejajar dengan metric-box
+        # Encode gambar ke base64
+        with open(image_path, "rb") as img_file:
+            b64_image = base64.b64encode(img_file.read()).decode()
+
+        # Tampilkan dengan HTML dan align center
+        st.markdown(
+            f"""
+            <div style="text-align: center;">
+                <img src="data:image/png;base64,{b64_image}" width="450"/>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
     else:
         st.warning("⚠️ Gambar tidak ditemukan!")
 
