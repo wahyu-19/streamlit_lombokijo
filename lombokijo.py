@@ -191,6 +191,11 @@ with col1:
         st.warning("⚠️ Data historis UV tidak tersedia.")
 
 with col2:
-    st.markdown(f'<div class="metric-box"><div class="icon">🌡️</div>{suhu}°C</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="metric-box"><div class="icon">💧</div>{kelembapan}%</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="metric-box"><div class="icon">☀️</div>{uv_now}</div>', unsafe_allow_html=True)
+    # Format nilai UV ke dua angka di belakang koma jika berupa angka
+    formatted_uv = f"{uv_now:.2f}" if isinstance(uv_now, (int, float)) else uv_now
+    formatted_suhu = f"{suhu:.1f}" if isinstance(suhu, (int, float)) else suhu
+    formatted_kelembapan = f"{kelembapan:.1f}" if isinstance(kelembapan, (int, float)) else kelembapan
+
+    st.markdown(f'<div class="metric-box"><div class="icon">🌡️</div>{formatted_suhu}°C</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><div class="icon">💧</div>{formatted_kelembapan}%</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><div class="icon">☀️</div>{formatted_uv}</div>', unsafe_allow_html=True)
