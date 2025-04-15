@@ -4,6 +4,7 @@ import os
 import base64
 import pandas as pd
 from datetime import datetime
+import pytz
 from streamlit_autorefresh import st_autorefresh
 
 # ----------------------------
@@ -119,16 +120,33 @@ kelembapan = get_latest_value("humidity")
 uv_now = get_latest_value("uv")
 
 # ----------------------------
-# Waktu Sekarang
+# Waktu Sekarang (WIB)
 # ----------------------------
-current_time = datetime.now().strftime("%d %B %Y %H:%M:%S")
+wib = pytz.timezone('Asia/Jakarta')
+current_time = datetime.now(wib).strftime("%H:%M:%S - %d %B %Y")
 
 # ----------------------------
 # TAMPILAN UTAMA
 # ----------------------------
 st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
 st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
-st.markdown(f'<div style="text-align:center; font-size:16px; color:#888; margin-top:-10px;">🕒 {current_time}</div>', unsafe_allow_html=True)
+
+# 👉 Jam digital WIB
+st.markdown(
+    f'''
+    <div style="
+        text-align: center;
+        font-size: 20px;
+        font-weight: 500;
+        color: #666;
+        margin-top: -5px;
+        font-family: 'Courier New', monospace;
+    ">
+        🕒 {current_time}
+    </div>
+    ''',
+    unsafe_allow_html=True
+)
 
 col1, col2 = st.columns([1, 1])
 
