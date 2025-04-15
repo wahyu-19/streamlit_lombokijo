@@ -22,6 +22,7 @@ st.set_page_config(
 st_autorefresh(interval=10_000, key="refresh")
 
 # ----------------------------
+# ----------------------------
 # Styling CSS responsif
 # ----------------------------
 st.markdown("""
@@ -32,6 +33,7 @@ st.markdown("""
         background-color: white !important;
         overflow-x: hidden;
     }
+
     .big-title {
         font-size: 64px;
         font-weight: 900;
@@ -39,6 +41,7 @@ st.markdown("""
         margin-bottom: 0.25rem;
         text-align: center;
     }
+
     .description {
         font-size: 18px;
         color: #333;
@@ -47,6 +50,7 @@ st.markdown("""
         text-align: center;
         padding: 0 10px;
     }
+
     .metric-box {
         background-color: white;
         width: 100%;
@@ -66,6 +70,7 @@ st.markdown("""
         margin-left: auto;
         margin-right: auto;
     }
+
     .icon {
         font-size: 36px;
         margin-bottom: 8px;
@@ -86,8 +91,20 @@ st.markdown("""
             font-size: 30px;
         }
     }
+
+    /* 🔁 Animasi blink untuk jam */
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0.3; }
+        100% { opacity: 1; }
+    }
+
+    .blink-time {
+        animation: blink 1s infinite;
+    }
     </style>
 """, unsafe_allow_html=True)
+
 
 # ----------------------------
 # Ambil data dari Ubidots
@@ -123,7 +140,8 @@ uv_now = get_latest_value("uv")
 # Waktu Sekarang (WIB)
 # ----------------------------
 wib = pytz.timezone('Asia/Jakarta')
-current_time = datetime.now(wib).strftime("%d %B %Y<br>%H:%M:%S")
+tanggal = datetime.now(wib).strftime("%d %B %Y")
+jam = datetime.now(wib).strftime("%H:%M:%S")
 
 
 # ----------------------------
@@ -145,7 +163,7 @@ st.markdown(
         font-family: 'Courier New', monospace;
         line-height: 1.6;
     ">
-        🕒<br>{current_time}
+        🕒<br>{tanggal}<br><span class="blink-time">{jam}</span>
     </div>
     ''',
     unsafe_allow_html=True
