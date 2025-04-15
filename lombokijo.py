@@ -123,7 +123,7 @@ uv_now = get_latest_value("uv")
 # Waktu Sekarang (WIB)
 # ----------------------------
 wib = pytz.timezone('Asia/Jakarta')
-current_time = datetime.now(wib).strftime("%H:%M:%S - %d %B %Y")
+current_time = datetime.now(wib).strftime("%d %B %Y\n%H:%M:%S")
 
 # ----------------------------
 # TAMPILAN UTAMA
