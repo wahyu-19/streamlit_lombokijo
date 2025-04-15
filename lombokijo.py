@@ -83,16 +83,19 @@ def get_uv_history(limit=20):
     try:
         url = f"{UBIDOTS_ENDPOINT}uv/values?page_size={limit}"
         response = requests.get(url, headers=header_ubidots)
+        st.write("🔍 UV Response Code:", response.status_code)
+        st.write("🔍 UV Response Text:", response.text)
         if response.status_code == 200:
             results = response.json().get("results", [])
-            uv_values = [item["value"] for item in results][::-1]  # dibalik biar urut
+            uv_values = [item["value"] for item in results][::-1]
             labels = [f"Data {i+1}" for i in range(len(uv_values))]
             return uv_values, labels
         else:
             return [], []
     except Exception as e:
-        print("❌ Ubidots History Error:", e)
+        st.error(f"❌ Error ambil data UV: {e}")
         return [], []
+
 
 # ----------------------------
 # Ambil data dari Ubidots
