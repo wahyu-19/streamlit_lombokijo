@@ -101,6 +101,9 @@ suhu = get_variable_value("temperature")
 kelembapan = get_variable_value("humidity")
 uv_data, labels = get_uv_history()
 
+# Tentukan nilai UV sekarang (dengan fallback)
+uv_now = uv_data[-1] if uv_data else "N/A"
+
 # ----------------------------
 # Layout: 2 kolom besar (6:4)
 # ----------------------------
@@ -113,10 +116,9 @@ with col_left:
     st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
     st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
 
-    if uv_data:
-        uv_now = uv_data[-1]  # Ambil nilai UV terbaru
-        image_path = ""
+    image_path = ""
 
+    if isinstance(uv_now, (int, float)):
         if uv_now <= 2:
             image_path = "Sejuk.png"
         elif 3 <= uv_now <= 5:
@@ -124,12 +126,12 @@ with col_left:
         else:
             image_path = "panas banget.png"
     else:
-        # Jika belum ada data UV, tampilkan gambar default
         image_path = "Sejuk.png"
-        if os.path.exists(image_path):
-            st.image(image_path, width=500)
-        else:
-            st.warning("⚠️ Gambar default tidak ditemukan!")
+
+    if os.path.exists(image_path):
+        st.image(image_path, width=500)
+    else:
+        st.warning("⚠️ Gambar tidak ditemukan!")
 
 # ----------------------------
 # Kolom KANAN: Metrik + Grafik UV
@@ -137,4 +139,4 @@ with col_left:
 with col_right:
     st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="metric-box"><span class="icon">☀️</span>{UV Index}%</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><span class="icon">☀️</span>{uv_now}%</div>', unsafe_allow_html=True)
