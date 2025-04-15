@@ -18,78 +18,77 @@ st.set_page_config(
 st_autorefresh(interval=10_000, key="refresh")
 
 # ----------------------------
-# Styling CSS responsif
+# Styling CSS responsif & fix tinggi layar
 # ----------------------------
 st.markdown("""
     <style>
-    /* Base styles */
-    body, .main, .block-container {
+    html, body, .main, .block-container {
+        margin: 0 !important;
+        padding: 0 !important;
         background-color: white !important;
+        height: 100vh !important;
+        overflow: hidden;
     }
+
+    .container-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;
+        padding: 1rem;
+    }
+
     .big-title {
-        font-size: 7vw;
+        font-size: 64px;
         font-weight: 900;
-        margin-bottom: 1rem;
         color: #111;
+        margin: 0;
         text-align: center;
     }
+
     .description {
-        font-size: 1.25rem;
+        font-size: 18px;
         color: #333;
         text-align: center;
-        margin-top: -0.5rem;
-        margin-bottom: 2rem;
-        padding: 0 1rem;
+        margin-bottom: 1.5rem;
     }
+
     .metric-box {
         background-color: white;
-        width: 90%;
-        max-width: 500px;
-        height: 150px;
+        width: 100%;
+        max-width: 300px;
+        height: 140px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         border-radius: 24px;
         color: #4CD964;
-        font-size: 1.75rem;
+        font-size: 28px;
         font-weight: 700;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
         box-shadow: 0 0 15px rgba(76, 217, 100, 0.4);
-        border: none;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .icon {
-        font-size: 2rem;
-        margin-right: 0.5rem;
-        vertical-align: middle;
     }
 
-    /* Responsive adjustments */
-    @media screen and (max-width: 768px) {
+    .icon {
+        font-size: 36px;
+        margin-bottom: 8px;
+    }
+
+    @media (max-width: 768px) {
         .big-title {
-            font-size: 10vw;
+            font-size: 42px;
         }
         .description {
-            font-size: 1rem;
+            font-size: 16px;
         }
-        .metric-box {
-            height: 130px;
-            font-size: 1.5rem;
-        }
-        .icon {
-            font-size: 1.75rem;
-        }
-    }
-
-    @media screen and (max-width: 480px) {
         .metric-box {
             height: 120px;
-            font-size: 1.25rem;
+            font-size: 22px;
         }
         .icon {
-            font-size: 1.5rem;
+            font-size: 30px;
         }
     }
     </style>
@@ -123,6 +122,7 @@ uv_now = get_variable_value("uv")
 # ----------------------------
 # TAMPILAN UTAMA
 # ----------------------------
+st.markdown('<div class="container-wrapper">', unsafe_allow_html=True)
 st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
 st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
 
@@ -141,7 +141,7 @@ with col1:
         image_path = "Sejuk.png"
     
     if os.path.exists(image_path):
-        st.image(image_path, use_column_width=True)
+        st.image(image_path, use_container_width=True)
     else:
         st.warning("⚠️ Gambar tidak ditemukan!")
 
@@ -149,3 +149,5 @@ with col2:
     st.markdown(f'<div class="metric-box"><div class="icon">🌡️</div>{suhu}°C</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><div class="icon">💧</div>{kelembapan}%</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><div class="icon">☀️</div>{uv_now}</div>', unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
