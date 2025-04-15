@@ -23,27 +23,56 @@ st_autorefresh(interval=10_000, key="refresh")
 # ----------------------------
 st.markdown("""
     <style>
-    body, .main, .block-container {
+    html, body, .main, .block-container {
         background-color: white !important;
-        overflow-x: hidden;
+        padding: 0;
+        margin: 0;
+        height: 100vh;
+        overflow: hidden;
     }
+
+    .container-flex {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;
+        padding: 2vw 5vw;
+        gap: 3vw;
+        flex-wrap: wrap;
+    }
+
+    .left-section {
+        flex: 1.5;
+    }
+
+    .right-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+    }
+
     .big-title {
-        font-size: 4.5rem;
+        font-size: 4vw;
         font-weight: 900;
         margin-bottom: 0.5rem;
         color: #111;
-        margin-top: -20px;
-    }   
+    }
+
     .description {
-        font-size: 1.5rem;
+        font-size: 1.3vw;
         color: #333;
         margin-bottom: 2rem;
     }
+
     .metric-box {
         background-color: white;
         width: 100%;
-        max-width: 300px;
-        height: 150px;
+        max-width: 280px;
+        aspect-ratio: 1 / 1;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -52,34 +81,40 @@ st.markdown("""
         color: #4CD964;
         font-size: 1.8rem;
         font-weight: 700;
-        margin-bottom: 1rem;
         box-shadow: 0 0 12px rgba(76, 217, 100, 0.4);
         border: none;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .icon {
-        font-size: 2.2rem;
-        margin-bottom: 0.5rem;
     }
 
-    /* Responsive tweaks */
+    .icon {
+        font-size: 2rem;
+        margin-bottom: 0.3rem;
+    }
+
     @media screen and (max-width: 768px) {
+        .container-flex {
+            flex-direction: column;
+            justify-content: start;
+            align-items: center;
+            padding: 5vw;
+            gap: 2vh;
+            height: auto;
+            overflow-y: auto;
+        }
         .big-title {
-            font-size: 2.5rem;
+            font-size: 7vw;
             text-align: center;
         }
         .description {
-            font-size: 1.2rem;
+            font-size: 4vw;
             text-align: center;
         }
         .metric-box {
-            height: auto;
-            padding: 1rem;
+            font-size: 1.4rem;
         }
     }
     </style>
 """, unsafe_allow_html=True)
+
 
 # ----------------------------
 # Konfigurasi Ubidots
