@@ -97,7 +97,7 @@ header_ubidots = {
 
 def get_variable_value(variable):
     try:
-        url = f"{UBIDOTS_ENDPOINT}{variable}/histori"
+        url = f"{UBIDOTS_ENDPOINT}{variable}/"
         response = requests.get(url, headers=header_ubidots)
         if response.status_code == 200:
             return float(response.text)
