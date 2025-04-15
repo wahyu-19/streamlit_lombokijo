@@ -31,7 +31,7 @@ st.markdown("""
     font-weight: 900;
     margin-bottom: 0.5rem;
     color: #111;
-    margin-top: -150px;  /* Menurunkan nilai margin-top untuk mendekatkan teks ke atas */
+    margin-top: -50px;  /* Menurunkan nilai margin-top untuk mendekatkan teks ke atas */
     }
 
     .description {
