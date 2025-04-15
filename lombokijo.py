@@ -89,7 +89,7 @@ st.markdown("""
 # ----------------------------
 # Ambil data dari Ubidots
 # ----------------------------
-UBIDOTS_ENDPOINT = "http://industrial.api.ubidots.com/api/v1.6/devices/esp32/"
+UBIDOTS_ENDPOINT = "http://industrial.api.ubidots.com/api/v1.6/devices/esp32/values"
 header_ubidots = {
     "Content-Type": "application/json",
     "X-Auth-Token": "BBUS-GoISeXoa4YzzhmEgmoKUVgiv2Y3n9H"
