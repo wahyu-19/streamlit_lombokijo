@@ -23,46 +23,82 @@ st_autorefresh(interval=10_000, key="refresh")
 # ----------------------------
 st.markdown("""
     <style>
-    body, .main, .block-container {
+    html, body, .main, .block-container {
         background-color: white !important;
+        padding: 2rem !important;
+        margin: 0;
+        max-width: 100%;
+        overflow-x: hidden;
     }
+
     .big-title {
-    font-size: 72px;
-    font-weight: 900;
-    margin-bottom: 0.5rem;
-    color: #111;
-    margin-top: -30px; /* << Tambahkan ini */
-    }   
-    .description {
-        font-size: 28px;
-        color: #333;
-        margin-bottom: 2.5rem;
+        font-size: 64px;
+        font-weight: 900;
+        color: #111;
+        margin-bottom: 0.25rem;
     }
+
+    .description {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 2rem;
+    }
+
+    .metrics-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        justify-content: space-between;
+        margin-top: 2rem;
+    }
+
     .metric-box {
         background-color: white;
-        width: 500px;
-        height: 175px;
+        flex: 1 1 calc(33% - 1rem);
+        min-width: 220px;
+        max-width: 100%;
+        aspect-ratio: 1 / 1; /* Kotak persegi */
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         border-radius: 24px;
         color: #4CD964;
-        font-size: 32px;
+        font-size: 28px;
         font-weight: 700;
-        margin-bottom: 1.5rem;
         box-shadow: 0 0 15px rgba(76, 217, 100, 0.4);
-        border: none;
-        margin-left: auto;
-        margin-right: auto;
+        padding: 1.5rem;
     }
+
     .icon {
-        font-size: 42px;
-        margin-right: 12px;
-        vertical-align: middle;
+        font-size: 44px;
+        margin-bottom: 0.6rem;
+    }
+
+    @media screen and (max-width: 768px) {
+        .big-title {
+            font-size: 42px;
+            text-align: center;
+        }
+
+        .description {
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .metrics-container {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .metric-box {
+            width: 100%;
+            aspect-ratio: auto;
+        }
     }
     </style>
 """, unsafe_allow_html=True)
+
 
 # ----------------------------
 # Konfigurasi Ubidots
@@ -128,6 +164,8 @@ with col_left:
 # Kolom KANAN: Metrik
 # ----------------------------
 with col_right:
-    st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="metric-box"><span class="icon">☀️</span>{uv_now}</div>', unsafe_allow_html=True)
+    st.markdown('<div class="metrics-container">', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><div class="icon">🌡️</div>{suhu}°C</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><div class="icon">💧</div>{kelembapan}%</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><div class="icon">☀️</div>{uv_now}</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
