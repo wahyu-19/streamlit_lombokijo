@@ -23,98 +23,46 @@ st_autorefresh(interval=10_000, key="refresh")
 # ----------------------------
 st.markdown("""
     <style>
-    html, body, .main, .block-container {
+    body, .main, .block-container {
         background-color: white !important;
-        padding: 0;
-        margin: 0;
-        height: 100vh;
-        overflow: hidden;
     }
-
-    .container-flex {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        height: 100%;
-        padding: 2vw 5vw;
-        gap: 3vw;
-        flex-wrap: wrap;
-    }
-
-    .left-section {
-        flex: 1.5;
-    }
-
-    .right-section {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 1rem;
-    }
-
     .big-title {
-        font-size: 4vw;
-        font-weight: 900;
-        margin-bottom: 0.5rem;
-        color: #111;
-    }
-
+    font-size: 72px;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    color: #111;
+    margin-top: -30px; /* << Tambahkan ini */
+    }   
     .description {
-        font-size: 1.3vw;
+        font-size: 28px;
         color: #333;
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
     }
-
     .metric-box {
         background-color: white;
-        width: 100%;
-        max-width: 280px;
-        aspect-ratio: 1 / 1;
+        width: 500px;
+        height: 175px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         border-radius: 24px;
         color: #4CD964;
-        font-size: 1.8rem;
+        font-size: 32px;
         font-weight: 700;
-        box-shadow: 0 0 12px rgba(76, 217, 100, 0.4);
+        margin-bottom: 1.5rem;
+        box-shadow: 0 0 15px rgba(76, 217, 100, 0.4);
         border: none;
+        margin-left: auto;
+        margin-right: auto;
     }
-
     .icon {
-        font-size: 2rem;
-        margin-bottom: 0.3rem;
-    }
-
-    @media screen and (max-width: 768px) {
-        .container-flex {
-            flex-direction: column;
-            justify-content: start;
-            align-items: center;
-            padding: 5vw;
-            gap: 2vh;
-            height: auto;
-            overflow-y: auto;
-        }
-        .big-title {
-            font-size: 7vw;
-            text-align: center;
-        }
-        .description {
-            font-size: 4vw;
-            text-align: center;
-        }
-        .metric-box {
-            font-size: 1.4rem;
-        }
+        font-size: 42px;
+        margin-right: 12px;
+        vertical-align: middle;
     }
     </style>
 """, unsafe_allow_html=True)
-
 
 # ----------------------------
 # Konfigurasi Ubidots
