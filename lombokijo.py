@@ -3,8 +3,6 @@ import requests
 import os
 import base64
 from streamlit_autorefresh import st_autorefresh
-import plotly.graph_objs as go
-from datetime import datetime
 
 # ----------------------------
 # Konfigurasi halaman
@@ -154,55 +152,3 @@ with col2:
     st.markdown(f'<div class="metric-box"><div class="icon">🌡️</div>{suhu}°C</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><div class="icon">💧</div>{kelembapan}%</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><div class="icon">☀️</div>{uv_now}</div>', unsafe_allow_html=True)
-
-import pandas as pd
-import plotly.express as px
-
-# Fungsi ambil data historis
-def get_variable_series(variable, limit=20):
-    try:
-        url = f"{UBIDOTS_ENDPOINT}{variable}/values?limit={limit}"
-        response = requests.get(url, headers=header_ubidots)
-        if response.status_code == 200:
-            data = response.json().get('results', [])
-            df = pd.DataFrame(data)
-            df['datetime'] = pd.to_datetime(df['timestamp'], unit='ms')
-            df['value'] = df['value'].astype(float)
-            return df[['datetime', 'value']]
-        else:
-            return pd.DataFrame()
-    except Exception as e:
-        print(f"❌ Error fetching {variable}: {e}")
-        return pd.DataFrame()
-
-# Ambil data historis
-df_temp = get_variable_series("temperature")
-df_humid = get_variable_series("humidity")
-df_uv = get_variable_series("uv")
-
-# Tampilkan grafik
-st.markdown("<h3 style='text-align: center;'>📊 Trend Cuaca Terkini</h3>", unsafe_allow_html=True)
-
-col3, col4, col5 = st.columns(3)
-
-with col3:
-    if not df_temp.empty:
-        fig = px.line(df_temp, x='datetime', y='value', title='Suhu (°C)', markers=True)
-        st.plotly_chart(fig, use_container_width=True)
-    else:
-        st.warning("Data suhu tidak tersedia.")
-
-with col4:
-    if not df_humid.empty:
-        fig = px.line(df_humid, x='datetime', y='value', title='Kelembapan (%)', markers=True)
-        st.plotly_chart(fig, use_container_width=True)
-    else:
-        st.warning("Data kelembapan tidak tersedia.")
-
-with col5:
-    if not df_uv.empty:
-        fig = px.line(df_uv, x='datetime', y='value', title='Intensitas UV', markers=True)
-        st.plotly_chart(fig, use_container_width=True)
-    else:
-        st.warning("Data UV tidak tersedia.")
-
