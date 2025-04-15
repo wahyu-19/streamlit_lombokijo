@@ -1,11 +1,10 @@
 import streamlit as st
-import matplotlib.pyplot as plt
 import requests
 import os
 from streamlit_autorefresh import st_autorefresh
 
 # ----------------------------
-# HARUS PALING ATAS: Konfigurasi halaman
+# Konfigurasi halaman
 # ----------------------------
 st.set_page_config(
     page_title="Blow n Glow",
@@ -19,13 +18,34 @@ st.set_page_config(
 st_autorefresh(interval=10_000, key="refresh")
 
 # ----------------------------
-# Styling kustom
+# Styling kustom (CSS)
 # ----------------------------
 st.markdown("""
     <style>
     body, .main, .block-container {
         background-color: white !important;
-        padding: 2rem 3rem 2rem 3rem !important; /* padding atas, kanan, bawah, kiri */
+        padding: 2rem 3rem 2rem 3rem !important;
+    }
+
+    .container-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .left-content {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .right-content {
+        flex: 1;
+        min-width: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
     .big-title {
@@ -45,8 +65,8 @@ st.markdown("""
     .metric-box {
         background-color: white;
         width: 100%;
-        max-width: 320px;
-        height: 100px;
+        max-width: 300px;
+        height: 90px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -57,33 +77,41 @@ st.markdown("""
         margin-bottom: 1.2rem;
         box-shadow: 0 0 10px rgba(76, 217, 100, 0.3);
         padding: 1rem;
-        margin-left: auto;
-        margin-right: auto;
     }
 
     .icon {
-        font-size: 32px;
+        font-size: 28px;
         margin-right: 10px;
         vertical-align: middle;
     }
 
-    /* Responsif untuk layar kecil (HP) */
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
     @media screen and (max-width: 768px) {
+        .container-flex {
+            flex-direction: column;
+            align-items: center;
+        }
+
         .big-title {
             font-size: 42px;
             text-align: center;
         }
+
         .description {
             font-size: 18px;
             text-align: center;
         }
+
         .metric-box {
-            max-width: 100%;
+            max-width: 90%;
         }
     }
     </style>
 """, unsafe_allow_html=True)
-
 
 # ----------------------------
 # Konfigurasi Ubidots
@@ -114,43 +142,42 @@ def get_variable_value(variable):
 # ----------------------------
 suhu = get_variable_value("temperature")
 kelembapan = get_variable_value("humidity")
-uv_now = get_variable_value("uv")  # Langsung ambil nilai terakhir
+uv_now = get_variable_value("uv")
 
 # ----------------------------
-# Layout: 2 kolom besar (6:4)
+# Layout Flex
 # ----------------------------
-col_left, col_right = st.columns([6, 4])
+st.markdown('<div class="container-flex">', unsafe_allow_html=True)
 
-# ----------------------------
-# Kolom KIRI: Judul, Deskripsi, Gambar
-# ----------------------------
-with col_left:
-    st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
-    st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
+# KIRI
+st.markdown('<div class="left-content">', unsafe_allow_html=True)
+st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
+st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
 
-    image_path = ""
-
-    if isinstance(uv_now, (int, float)):
-        if uv_now <= 2:
-            image_path = "Sejuk.png"
-        elif 3 <= uv_now <= 5:
-            image_path = "sedang.png"
-        else:
-            image_path = "panas banget.png"
-    else:
+# Tentukan gambar UV
+image_path = ""
+if isinstance(uv_now, (int, float)):
+    if uv_now <= 2:
         image_path = "Sejuk.png"
-
-    if os.path.exists(image_path):
-        st.image(image_path, width=500)
+    elif 3 <= uv_now <= 5:
+        image_path = "sedang.png"
     else:
-        st.warning("⚠️ Gambar tidak ditemukan!")
+        image_path = "panas banget.png"
+else:
+    image_path = "Sejuk.png"
 
-# ----------------------------
-# Kolom KANAN: Metrik
-# ----------------------------
-with col_right:
-    st.markdown('<div class="metrics-container">', unsafe_allow_html=True)
-    st.markdown(f'<div class="metric-box"><div class="icon">🌡️</div>{suhu}°C</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="metric-box"><div class="icon">💧</div>{kelembapan}%</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="metric-box"><div class="icon">☀️</div>{uv_now}</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+# Tampilkan gambar
+if os.path.exists(image_path):
+    st.image(image_path, use_column_width=True)
+else:
+    st.warning("⚠️ Gambar tidak ditemukan!")
+st.markdown('</div>', unsafe_allow_html=True)
+
+# KANAN
+st.markdown('<div class="right-content">', unsafe_allow_html=True)
+st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="metric-box"><span class="icon">☀️</span>{uv_now}</div>', unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)  # Tutup container-flex
