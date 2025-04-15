@@ -100,7 +100,7 @@ def get_uv_history(limit=20):
 # ----------------------------
 suhu = get_variable_value("temperature")
 kelembapan = get_variable_value("humidity")
-uv_data, labels = get_uv_history()
+uv_data, labels = get_variable_value("uv")
 
 # Tentukan nilai UV sekarang (dengan fallback)
 uv_now = uv_data[-1] if uv_data else "N/A"
