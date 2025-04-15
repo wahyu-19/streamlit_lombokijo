@@ -40,7 +40,7 @@ st.markdown("""
     .metric-box {
         background-color: white;
         width: 500px;
-        height: 300px;
+        height: 175px;
         display: flex;
         flex-direction: column;
         align-items: center;
