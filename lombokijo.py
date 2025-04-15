@@ -39,15 +39,21 @@ st.markdown("""
     }
     .metric-box {
         background-color: white;
-        padding: 2rem;
-        border-radius: 12px;
-        text-align: center;
+        width: 200px;
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 24px;
         color: #4CD964;
-        font-size: 38px;
+        font-size: 32px;
         font-weight: 700;
         margin-bottom: 1.5rem;
-        box-shadow: 0 0 15px rgba(76, 217, 100, 0.5);
-        border: 2px solid #4CD964;
+        box-shadow: 0 0 15px rgba(76, 217, 100, 0.4);
+        border: none;
+        margin-left: auto;
+        margin-right: auto;
     }
     .icon {
         font-size: 42px;
