@@ -118,10 +118,16 @@ kelembapan = get_latest_value("humidity")
 uv_now = get_latest_value("uv")
 
 # ----------------------------
+# Waktu Sekarang
+# ----------------------------
+current_time = datetime.now().strftime("%d %B %Y %H:%M:%S")
+
+# ----------------------------
 # TAMPILAN UTAMA
 # ----------------------------
 st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
 st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
+st.markdown(f'<div style="text-align:center; font-size:16px; color:#888; margin-top:-10px;">🕒 {current_time}</div>', unsafe_allow_html=True)
 
 col1, col2 = st.columns([1, 1])
 
