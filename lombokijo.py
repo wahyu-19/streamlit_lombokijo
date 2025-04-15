@@ -123,15 +123,7 @@ uv_now = get_latest_value("uv")
 # Waktu Sekarang (WIB)
 # ----------------------------
 wib = pytz.timezone('Asia/Jakarta')
-now = datetime.now(wib)
-
-# Ambil tanggal dan jam
-tanggal = now.strftime("%d %B %Y")
-jam = now.strftime("%H:%M:%S")
-
-# Tampilkan tanggal dan jam dengan style
-st.markdown(f"<h3 style='text-align: center;'>{tanggal}</h3>", unsafe_allow_html=True)
-st.markdown(f"<h4 style='text-align: center; color: gray;'>{jam}</h4>", unsafe_allow_html=True)
+current_time = datetime.now(wib).strftime("%H:%M:%S - %d %B %Y")
 
 # ----------------------------
 # TAMPILAN UTAMA
