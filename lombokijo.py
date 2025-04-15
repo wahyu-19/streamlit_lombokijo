@@ -2,6 +2,8 @@ import streamlit as st
 import requests
 import os
 import base64
+import pandas as pd
+import matplotlib.pyplot as plt
 from streamlit_autorefresh import st_autorefresh
 
 # ----------------------------
@@ -89,27 +91,48 @@ st.markdown("""
 # ----------------------------
 # Ambil data dari Ubidots
 # ----------------------------
-UBIDOTS_ENDPOINT = "http://industrial.api.ubidots.com/api/v1.6/devices/esp32/"
-header_ubidots = {
+UBIDOTS_DEVICE = "esp32"
+UBIDOTS_TOKEN = "BBUS-GoISeXoa4YzzhmEgmoKUVgiv2Y3n9H"
+UBIDOTS_ENDPOINT = f"http://industrial.api.ubidots.com/api/v1.6/devices/{UBIDOTS_DEVICE}/"
+HEADERS = {
     "Content-Type": "application/json",
-    "X-Auth-Token": "BBUS-GoISeXoa4YzzhmEgmoKUVgiv2Y3n9H"
+    "X-Auth-Token": UBIDOTS_TOKEN
 }
 
-def get_variable_value(variable):
+def get_latest_value(variable):
     try:
-        url = f"{UBIDOTS_ENDPOINT}{variable}/"
-        response = requests.get(url, headers=header_ubidots)
+        url = f"{UBIDOTS_ENDPOINT}{variable}/lv"
+        response = requests.get(url, headers=HEADERS)
         if response.status_code == 200:
             return float(response.text)
         else:
             return "N/A"
     except Exception as e:
-        print("❌ Ubidots Error:", e)
+        print("❌ Latest Value Error:", e)
         return "N/A"
 
-suhu = get_variable_value("temperature")
-kelembapan = get_variable_value("humidity")
-uv_now = get_variable_value("uv")
+def get_historical_values(variable, limit=30):
+    try:
+        url = f"{UBIDOTS_ENDPOINT}{variable}/values?limit={limit}"
+        response = requests.get(url, headers=HEADERS)
+        if response.status_code == 200:
+            data = response.json()["results"]
+            df = pd.DataFrame(data)
+            df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms")
+            return df
+        else:
+            return pd.DataFrame()
+    except Exception as e:
+        print("❌ Historical Value Error:", e)
+        return pd.DataFrame()
+
+# ----------------------------
+# Ambil nilai terbaru dan historis
+# ----------------------------
+suhu = get_latest_value("temperature")
+kelembapan = get_latest_value("humidity")
+uv_now = get_latest_value("uv")
+uv_hist = get_historical_values("uv", limit=24)  # Ambil 24 data terakhir
 
 # ----------------------------
 # TAMPILAN UTAMA
@@ -130,13 +153,11 @@ with col1:
             image_path = "panas banget.png"
     else:
         image_path = "Sejuk.png"
-    
+
     if os.path.exists(image_path):
-        # Encode gambar ke base64
         with open(image_path, "rb") as img_file:
             b64_image = base64.b64encode(img_file.read()).decode()
 
-        # Tampilkan dengan HTML dan align center
         st.markdown(
             f"""
             <div style="text-align: center;">
@@ -147,6 +168,20 @@ with col1:
         )
     else:
         st.warning("⚠️ Gambar tidak ditemukan!")
+
+    # Grafik UV historis
+    if not uv_hist.empty:
+        st.subheader("Grafik Tren UV (24 Data Terakhir)")
+        fig, ax = plt.subplots()
+        ax.plot(uv_hist["timestamp"], uv_hist["value"], marker='o', color="#f39c12")
+        ax.set_xlabel("Waktu")
+        ax.set_ylabel("Indeks UV")
+        ax.set_title("Perubahan Indeks UV")
+        ax.grid(True)
+        fig.autofmt_xdate()
+        st.pyplot(fig)
+    else:
+        st.warning("⚠️ Data historis UV tidak tersedia.")
 
 with col2:
     st.markdown(f'<div class="metric-box"><div class="icon">🌡️</div>{suhu}°C</div>', unsafe_allow_html=True)
