@@ -138,8 +138,6 @@ while True:
         st.markdown(f"<h3 style='text-align: center;'>{tanggal}</h3>", unsafe_allow_html=True)
         st.markdown(f"<h4 style='text-align: center; color: gray;'>{jam}</h4>", unsafe_allow_html=True)
 
-    time.sleep(1)
-
 # ----------------------------
 # TAMPILAN UTAMA
 # ----------------------------
