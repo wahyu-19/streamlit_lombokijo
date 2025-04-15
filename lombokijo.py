@@ -79,31 +79,12 @@ def get_variable_value(variable):
         print("❌ Ubidots Error:", e)
         return "N/A"
 
-def get_uv_history(limit=20):
-    try:
-        url = f"{UBIDOTS_ENDPOINT}uv/values?page_size={limit}"
-        response = requests.get(url, headers=header_ubidots)
-        if response.status_code == 200:
-            results = response.json().get("results", [])
-            uv_values = [item["value"] for item in results][::-1]  # dibalik biar urut
-            labels = [f"Data {i+1}" for i in range(len(uv_values))]
-            return uv_values, labels
-        else:
-            return [], []
-    except Exception as e:
-        print("❌ Ubidots History Error:", e)
-        return [], []
-
-
 # ----------------------------
 # Ambil data dari Ubidots
 # ----------------------------
 suhu = get_variable_value("temperature")
 kelembapan = get_variable_value("humidity")
-uv_data = get_variable_value("uv")
-
-# Tentukan nilai UV sekarang (dengan fallback)
-uv_now = uv_data[-1] if uv_data else "N/A"
+uv_now = get_variable_value("uv")  # Langsung ambil nilai terakhir
 
 # ----------------------------
 # Layout: 2 kolom besar (6:4)
@@ -111,7 +92,7 @@ uv_now = uv_data[-1] if uv_data else "N/A"
 col_left, col_right = st.columns([6, 4])
 
 # ----------------------------
-# Kolom KIRI: Judul, Deskripsi, Video atau Gambar
+# Kolom KIRI: Judul, Deskripsi, Gambar
 # ----------------------------
 with col_left:
     st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
@@ -135,9 +116,9 @@ with col_left:
         st.warning("⚠️ Gambar tidak ditemukan!")
 
 # ----------------------------
-# Kolom KANAN: Metrik + Grafik UV
+# Kolom KANAN: Metrik
 # ----------------------------
 with col_right:
     st.markdown(f'<div class="metric-box"><span class="icon">🌡️</span>{suhu}°C</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><span class="icon">💧</span>{kelembapan}%</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="metric-box"><span class="icon">☀️</span>{uv_now}%</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><span class="icon">☀️</span>{uv_now}</div>', unsafe_allow_html=True)
