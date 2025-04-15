@@ -125,6 +125,25 @@ uv_now = get_latest_value("uv")
 wib = pytz.timezone('Asia/Jakarta')
 current_time = datetime.now(wib).strftime("%d %B %Y<br>%H:%M:%S")
 
+# 👉 Jam digital WIB (tanggal di atas, jam di bawah)
+st.markdown(
+    f'''
+    <div style="
+        text-align: center;
+        font-size: 22px;
+        font-weight: 600;
+        color: #444;
+        margin-top: -10px;
+        margin-bottom: 20px;
+        font-family: 'Courier New', monospace;
+        line-height: 1.6;
+    ">
+        🕒<br>{current_time}
+    </div>
+    ''',
+    unsafe_allow_html=True
+)
+
 # ----------------------------
 # TAMPILAN UTAMA
 # ----------------------------
