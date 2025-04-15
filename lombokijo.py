@@ -118,14 +118,14 @@ with col_left:
         image_path = ""
 
         if uv_now <= 2:
-            image_path = "dingin.png"
+            image_path = "Sejuk.png"
         elif 3 <= uv_now <= 5:
             image_path = "sedang.png"
         else:
             image_path = "panas banget.png"
     else:
         # Jika belum ada data UV, tampilkan gambar default
-        image_path = "dingin.png"
+        image_path = "Sejuk.png"
         if os.path.exists(image_path):
             st.image(image_path, width=500)
         else:
