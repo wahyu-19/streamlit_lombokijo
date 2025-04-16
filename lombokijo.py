@@ -217,40 +217,40 @@ with col1:
             unsafe_allow_html=True
         )
     else:
-        st.warning("⚠ Gambar tidak ditemukan!")
+        st.warning("⚠️ Gambar tidak ditemukan!")
 
 with col2:
     formatted_uv = f"{uv_now:.2f}" if isinstance(uv_now, (int, float)) else uv_now
     formatted_suhu = f"{suhu:.1f}" if isinstance(suhu, (int, float)) else suhu
     formatted_kelembapan = f"{kelembapan:.1f}" if isinstance(kelembapan, (int, float)) else kelembapan
 
-    st.markdown(f'<div class="metric-box"><div class="icon">🌡</div>{formatted_suhu}°C</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><div class="icon">🌡️</div>{formatted_suhu}°C</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><div class="icon">💧</div>{formatted_kelembapan}%</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="metric-box"><div class="icon">☀</div>{formatted_uv}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><div class="icon">☀️</div>{formatted_uv}</div>', unsafe_allow_html=True)
 
 
 # ----------------------------
-# Grafik Historis Sensor (4 data terakhir)
+# Grafik Historis Sensor
 # ----------------------------
 st.markdown("<hr style='margin:30px 0;'>", unsafe_allow_html=True)
-st.markdown("<div class='big-title' style='font-size:32px;'>📈 Grafik Sensor</div>", unsafe_allow_html=True)
+st.markdown("<div class='big-title' style='font-size:32px;'>📈 Grafik Sensor (Historis)</div>", unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
     if not df_suhu.empty:
-        st.line_chart(df_suhu.tail(4).set_index("Waktu"))
+        st.line_chart(df_suhu.set_index("Waktu"))
     else:
         st.warning("Data suhu tidak tersedia.")
 
 with col2:
     if not df_kelembapan.empty:
-        st.line_chart(df_kelembapan.tail(4).set_index("Waktu"))
+        st.line_chart(df_kelembapan.set_index("Waktu"))
     else:
         st.warning("Data kelembapan tidak tersedia.")
 
 with col3:
     if not df_uv.empty:
-        st.line_chart(df_uv.tail(4).set_index("Waktu"))
+        st.line_chart(df_uv.set_index("Waktu"))
     else:
         st.warning("Data UV tidak tersedia.")
