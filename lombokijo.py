@@ -91,7 +91,6 @@ st.markdown("""
         }
     }
 
-    /* 🔁 Animasi blink untuk jam */
     @keyframes blink {
         0% { opacity: 1; }
         50% { opacity: 0.3; }
@@ -128,12 +127,35 @@ def get_latest_value(variable):
         print("❌ Latest Value Error:", e)
         return "N/A"
 
+def get_historical_data(variable, limit=20):
+    try:
+        url = f"{UBIDOTS_ENDPOINT}{variable}/values?limit={limit}"
+        response = requests.get(url, headers=HEADERS)
+        if response.status_code == 200:
+            raw_data = response.json()["results"]
+            df = pd.DataFrame(raw_data)
+            df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms").dt.tz_localize("UTC").dt.tz_convert("Asia/Jakarta")
+            df = df[["timestamp", "value"]].rename(columns={"timestamp": "Waktu", "value": variable.capitalize()})
+            return df
+        else:
+            return pd.DataFrame()
+    except Exception as e:
+        print(f"❌ Historical Data Error ({variable}):", e)
+        return pd.DataFrame()
+
 # ----------------------------
 # Ambil nilai sensor terbaru
 # ----------------------------
 suhu = get_latest_value("temperature")
 kelembapan = get_latest_value("humidity")
 uv_now = get_latest_value("uv")
+
+# ----------------------------
+# Ambil data historis
+# ----------------------------
+df_suhu = get_historical_data("temperature")
+df_kelembapan = get_historical_data("humidity")
+df_uv = get_historical_data("uv")
 
 # ----------------------------
 # Waktu Sekarang (WIB)
@@ -149,7 +171,7 @@ jam = datetime.now(wib).strftime("%H:%M:%S")
 st.markdown('<div class="big-title">Blow n Glow</div>', unsafe_allow_html=True)
 st.markdown('<div class="description">Know when to reapply your sunscreen — and don\'t forget to care for the Earth while you\'re at it.</div>', unsafe_allow_html=True)
 
-# 👉 Jam digital WIB (tanggal di atas, jam di bawah)
+# 👉 Jam digital WIB
 st.markdown(
     f'''
     <div style="
@@ -165,24 +187,8 @@ st.markdown(
         🕒<br>{tanggal}<br><span class="blink-time">{jam}</span>
     </div>
     ''',
-    unsafe_allow_html=True)
-
-# Data untuk grafik
-df_suhu = pd.DataFrame({'Time': [tanggal], 'Temperature': [suhu]})
-df_kelembapan = pd.DataFrame({'Time': [tanggal], 'Humidity': [kelembapan]})
-df_uv = pd.DataFrame({'Time': [tanggal], 'UV': [uv_now]})
-
-# Grafik untuk suhu
-st.markdown('<h3 style="text-align: center;">Suhu</h3>', unsafe_allow_html=True)
-st.line_chart(df_suhu.set_index('Time'))
-
-# Grafik untuk kelembapan
-st.markdown('<h3 style="text-align: center;">Kelembapan</h3>', unsafe_allow_html=True)
-st.line_chart(df_kelembapan.set_index('Time'))
-
-# Grafik untuk UV
-st.markdown('<h3 style="text-align: center;">UV</h3>', unsafe_allow_html=True)
-st.line_chart(df_uv.set_index('Time'))
+    unsafe_allow_html=True
+)
 
 col1, col2 = st.columns([1, 1])
 
@@ -211,13 +217,40 @@ with col1:
             unsafe_allow_html=True
         )
     else:
-        st.warning("⚠️ Gambar tidak ditemukan!")
+        st.warning("⚠ Gambar tidak ditemukan!")
 
 with col2:
     formatted_uv = f"{uv_now:.2f}" if isinstance(uv_now, (int, float)) else uv_now
     formatted_suhu = f"{suhu:.1f}" if isinstance(suhu, (int, float)) else suhu
     formatted_kelembapan = f"{kelembapan:.1f}" if isinstance(kelembapan, (int, float)) else kelembapan
 
-    st.markdown(f'<div class="metric-box"><div class="icon">🌡️</div>{formatted_suhu}°C</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><div class="icon">🌡</div>{formatted_suhu}°C</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><div class="icon">💧</div>{formatted_kelembapan}%</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="metric-box"><div class="icon">☀️</div>{formatted_uv}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-box"><div class="icon">☀</div>{formatted_uv}</div>', unsafe_allow_html=True)
+
+
+# ----------------------------
+# Grafik Historis Sensor (4 data terakhir)
+# ----------------------------
+st.markdown("<hr style='margin:30px 0;'>", unsafe_allow_html=True)
+st.markdown("<div class='big-title' style='font-size:32px;'>📈 Grafik Sensor</div>", unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    if not df_suhu.empty:
+        st.line_chart(df_suhu.tail(4).set_index("Waktu"))
+    else:
+        st.warning("Data suhu tidak tersedia.")
+
+with col2:
+    if not df_kelembapan.empty:
+        st.line_chart(df_kelembapan.tail(4).set_index("Waktu"))
+    else:
+        st.warning("Data kelembapan tidak tersedia.")
+
+with col3:
+    if not df_uv.empty:
+        st.line_chart(df_uv.tail(4).set_index("Waktu"))
+    else:
+        st.warning("Data UV tidak tersedia.")
