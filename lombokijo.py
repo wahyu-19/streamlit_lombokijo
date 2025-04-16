@@ -243,22 +243,21 @@ col1, col2, col3 = st.columns(3)
 
 with col1:
     if not df_suhu.empty:
-        st.line_chart(df_suhu.tail(4).set_index("Waktu"))
-        st.write(df_suhu.tail(4))  # Debug tampilkan data suhu
+        df_suhu.set_index('Waktu', inplace=True)
+        st.line_chart(df_suhu.tail(4))  # Gunakan tail() untuk 4 data terakhir
     else:
         st.warning("Data suhu tidak tersedia.")
 
 with col2:
     if not df_kelembapan.empty:
-        st.line_chart(df_kelembapan.tail(4).set_index("Waktu"))
-        st.write(df_kelembapan.tail(4))  # Debug tampilkan data kelembapan
+        df_kelembapan.set_index('Waktu', inplace=True)
+        st.line_chart(df_kelembapan.tail(4))  # Gunakan tail() untuk 4 data terakhir
     else:
         st.warning("Data kelembapan tidak tersedia.")
 
 with col3:
     if not df_uv.empty:
-        st.line_chart(df_uv.tail(4).set_index("Waktu"))
-        st.write(df_uv.tail(4))  # Debug tampilkan data UV
+        df_uv.set_index('Waktu', inplace=True)
+        st.line_chart(df_uv.tail(4))  # Gunakan tail() untuk 4 data terakhir
     else:
         st.warning("Data UV tidak tersedia.")
-
