@@ -108,7 +108,7 @@ st.markdown("""
 # Ambil data dari Ubidots
 # ----------------------------
 UBIDOTS_DEVICE = "esp32"
-UBIDOTS_TOKEN = "BBUS-GoISeXoa4YzzhmEgmoKUVgiv2Y3n9H"
+UBIDOTS_TOKEN = "BBUS-y9OTMkgYT1O9lk3d3hHLu9XlbRN7yM"
 UBIDOTS_ENDPOINT = f"http://industrial.api.ubidots.com/api/v1.6/devices/{UBIDOTS_DEVICE}/"
 HEADERS = {
     "Content-Type": "application/json",
