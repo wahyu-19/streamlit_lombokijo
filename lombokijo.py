@@ -231,31 +231,3 @@ with col2:
     st.markdown(f'<div class="metric-box"><div class="icon">💧</div>{formatted_kelembapan}%</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><div class="icon">☀️</div>{formatted_uv}</div>', unsafe_allow_html=True)
 
-# ----------------------------
-# Grafik Historis Sensor (4 data terakhir)
-# ----------------------------
-st.markdown("<hr style='margin:30px 0;'>", unsafe_allow_html=True)
-st.markdown("<div class='big-title' style='font-size:32px;'>📈 Grafik Sensor</div>", unsafe_allow_html=True)
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.write(f"Suhu Data: {df_suhu.tail(4)}")  # Debugging: Menampilkan data suhu
-    if not df_suhu.empty:
-        st.line_chart(df_suhu.tail(4).set_index("Waktu"))
-    else:
-        st.warning("Data suhu tidak tersedia.")
-
-with col2:
-    st.write(f"Kelembapan Data: {df_kelembapan.tail(4)}")  # Debugging: Menampilkan data kelembapan
-    if not df_kelembapan.empty:
-        st.line_chart(df_kelembapan.tail(4).set_index("Waktu"))
-    else:
-        st.warning("Data kelembapan tidak tersedia.")
-
-with col3:
-    st.write(f"UV Data: {df_uv.tail(4)}")  # Debugging: Menampilkan data UV
-    if not df_uv.empty:
-        st.line_chart(df_uv.tail(4).set_index("Waktu"))
-    else:
-        st.warning("Data UV tidak tersedia.")
