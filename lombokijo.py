@@ -134,13 +134,17 @@ def get_historical_data(variable, limit=20):
         if response.status_code == 200:
             raw_data = response.json()["results"]
             df = pd.DataFrame(raw_data)
-            df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms").dt.tz_localize("UTC").dt.tz_convert("Asia/Jakarta")
+            df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms", errors="coerce")
+            df["timestamp"] = df["timestamp"].dt.tz_localize("UTC").dt.tz_convert("Asia/Jakarta")
+            df = df.dropna(subset=["timestamp"])  # buang baris gagal parsing waktu
             df = df[["timestamp", "value"]].rename(columns={"timestamp": "Waktu", "value": variable.capitalize()})
+            df = df.sort_values("Waktu")
             return df
         else:
+            st.error(f"❌ Gagal mengambil data {variable}: {response.status_code}")
             return pd.DataFrame()
     except Exception as e:
-        print(f"❌ Historical Data Error ({variable}):", e)
+        st.error(f"❌ Error ambil data {variable}: {e}")
         return pd.DataFrame()
 
 # ----------------------------
@@ -240,17 +244,21 @@ col1, col2, col3 = st.columns(3)
 with col1:
     if not df_suhu.empty:
         st.line_chart(df_suhu.tail(4).set_index("Waktu"))
+        st.write(df_suhu.tail(4))  # Debug tampilkan data suhu
     else:
         st.warning("Data suhu tidak tersedia.")
 
 with col2:
     if not df_kelembapan.empty:
         st.line_chart(df_kelembapan.tail(4).set_index("Waktu"))
+        st.write(df_kelembapan.tail(4))  # Debug tampilkan data kelembapan
     else:
         st.warning("Data kelembapan tidak tersedia.")
 
 with col3:
     if not df_uv.empty:
         st.line_chart(df_uv.tail(4).set_index("Waktu"))
+        st.write(df_uv.tail(4))  # Debug tampilkan data UV
     else:
         st.warning("Data UV tidak tersedia.")
+
