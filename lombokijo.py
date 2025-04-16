@@ -159,7 +159,7 @@ st.markdown(
         font-family: 'Courier New', monospace;
         line-height: 1.6;
     ">
-        🕒<br>{tanggal}<br><span class="blink-time">{jam}</span>
+        🕒<br>{tanggal}<br><span class="blink-time">{jam} WIB</span>
     </div>
     ''',
     unsafe_allow_html=True
