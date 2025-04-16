@@ -162,7 +162,7 @@ df_uv = get_historical_data("uv")
 # ----------------------------
 wib = pytz.timezone('Asia/Jakarta')
 tanggal = datetime.now(wib).strftime("%d %B %Y")
-jam = datetime.now(wib).strftime("%H:%M:%S")
+jam = datetime.now(wib).strftime("%H:%M")
 
 
 # ----------------------------
@@ -184,7 +184,7 @@ st.markdown(
         font-family: 'Courier New', monospace;
         line-height: 1.6;
     ">
-        🕒<br>{tanggal}<br><span class="blink-time">{jam}</span>
+        🕒<br>{tanggal}<br><span class="blink-time">{jam} WIB</span>
     </div>
     ''',
     unsafe_allow_html=True
