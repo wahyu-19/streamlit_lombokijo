@@ -19,7 +19,7 @@ st.set_page_config(
 # ----------------------------
 # Auto-refresh
 # ----------------------------
-st_autorefresh(interval=10_000, key="refresh")
+st_autorefresh(interval=60_000, key="refresh")
 
 # ----------------------------
 # Styling CSS responsif
