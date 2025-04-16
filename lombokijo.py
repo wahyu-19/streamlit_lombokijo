@@ -19,7 +19,7 @@ st.set_page_config(
 # ----------------------------
 # Auto-refresh
 # ----------------------------
-st_autorefresh(interval=10_000, key="refresh")
+st_autorefresh(interval=60_000, key="refresh")
 
 # ----------------------------
 # Styling CSS responsif
@@ -32,6 +32,7 @@ st.markdown("""
         background-color: white !important;
         overflow-x: hidden;
     }
+
     .big-title {
         font-size: 64px;
         font-weight: 900;
@@ -39,6 +40,7 @@ st.markdown("""
         margin-bottom: 0.25rem;
         text-align: center;
     }
+
     .description {
         font-size: 18px;
         color: #333;
@@ -47,6 +49,7 @@ st.markdown("""
         text-align: center;
         padding: 0 10px;
     }
+
     .metric-box {
         background-color: white;
         width: 100%;
@@ -66,6 +69,7 @@ st.markdown("""
         margin-left: auto;
         margin-right: auto;
     }
+
     .icon {
         font-size: 36px;
         margin-bottom: 8px;
@@ -85,6 +89,16 @@ st.markdown("""
         .icon {
             font-size: 30px;
         }
+    }
+
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0.3; }
+        100% { opacity: 1; }
+    }
+
+    .blink-time {
+        animation: blink 1s infinite;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -145,7 +159,7 @@ st.markdown(
         font-family: 'Courier New', monospace;
         line-height: 1.6;
     ">
-        🕒<br>{tanggal}<br><span class="blink-time">{jam} WIB</span>
+        🕒<br>{tanggal}<br><span class="blink-time">{jam}</span>
     </div>
     ''',
     unsafe_allow_html=True
@@ -188,3 +202,5 @@ with col2:
     st.markdown(f'<div class="metric-box"><div class="icon">🌡️</div>{formatted_suhu}°C</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><div class="icon">💧</div>{formatted_kelembapan}%</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><div class="icon">☀️</div>{formatted_uv}</div>', unsafe_allow_html=True)
+
+st.markdown("<hr style='margin:30px 0;'>", unsafe_allow_html=True)
