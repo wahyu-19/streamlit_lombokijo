@@ -108,7 +108,7 @@ st.markdown("""
 # Ambil data dari Ubidots
 # ----------------------------
 UBIDOTS_DEVICE = "esp32"
-UBIDOTS_TOKEN = "BBUS-y9OTMkgYT1O9lk3d3hHLu9XlbRN7yM"
+UBIDOTS_TOKEN = "BBUS-GoISeXoa4YzzhmEgmoKUVgiv2Y3n9H"
 UBIDOTS_ENDPOINT = f"http://industrial.api.ubidots.com/api/v1.6/devices/{UBIDOTS_DEVICE}/"
 HEADERS = {
     "Content-Type": "application/json",
@@ -167,6 +167,7 @@ df_uv = get_historical_data("uv")
 wib = pytz.timezone('Asia/Jakarta')
 tanggal = datetime.now(wib).strftime("%d %B %Y")
 jam = datetime.now(wib).strftime("%H:%M")
+
 
 # ----------------------------
 # TAMPILAN UTAMA
@@ -230,4 +231,3 @@ with col2:
     st.markdown(f'<div class="metric-box"><div class="icon">🌡️</div>{formatted_suhu}°C</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><div class="icon">💧</div>{formatted_kelembapan}%</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><div class="icon">☀️</div>{formatted_uv}</div>', unsafe_allow_html=True)
-
