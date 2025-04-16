@@ -19,7 +19,7 @@ st.set_page_config(
 # ----------------------------
 # Auto-refresh
 # ----------------------------
-st_autorefresh(interval=60_000, key="refresh")
+st_autorefresh(interval=10_000, key="refresh")
 
 # ----------------------------
 # Styling CSS responsif
@@ -32,7 +32,6 @@ st.markdown("""
         background-color: white !important;
         overflow-x: hidden;
     }
-
     .big-title {
         font-size: 64px;
         font-weight: 900;
@@ -40,7 +39,6 @@ st.markdown("""
         margin-bottom: 0.25rem;
         text-align: center;
     }
-
     .description {
         font-size: 18px;
         color: #333;
@@ -49,7 +47,6 @@ st.markdown("""
         text-align: center;
         padding: 0 10px;
     }
-
     .metric-box {
         background-color: white;
         width: 100%;
@@ -69,7 +66,6 @@ st.markdown("""
         margin-left: auto;
         margin-right: auto;
     }
-
     .icon {
         font-size: 36px;
         margin-bottom: 8px;
@@ -90,19 +86,8 @@ st.markdown("""
             font-size: 30px;
         }
     }
-
-    @keyframes blink {
-        0% { opacity: 1; }
-        50% { opacity: 0.3; }
-        100% { opacity: 1; }
-    }
-
-    .blink-time {
-        animation: blink 1s infinite;
-    }
     </style>
 """, unsafe_allow_html=True)
-
 
 # ----------------------------
 # Ambil data dari Ubidots
@@ -127,26 +112,6 @@ def get_latest_value(variable):
         print("❌ Latest Value Error:", e)
         return "N/A"
 
-def get_historical_data(variable, limit=20):
-    try:
-        url = f"{UBIDOTS_ENDPOINT}{variable}/values?limit={limit}"
-        response = requests.get(url, headers=HEADERS)
-        if response.status_code == 200:
-            raw_data = response.json()["results"]
-            df = pd.DataFrame(raw_data)
-            df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms", errors="coerce")
-            df["timestamp"] = df["timestamp"].dt.tz_localize("UTC").dt.tz_convert("Asia/Jakarta")
-            df = df.dropna(subset=["timestamp"])  # buang baris gagal parsing waktu
-            df = df[["timestamp", "value"]].rename(columns={"timestamp": "Waktu", "value": variable.capitalize()})
-            df = df.sort_values("Waktu")
-            return df
-        else:
-            st.error(f"❌ Gagal mengambil data {variable}: {response.status_code}")
-            return pd.DataFrame()
-    except Exception as e:
-        st.error(f"❌ Error ambil data {variable}: {e}")
-        return pd.DataFrame()
-
 # ----------------------------
 # Ambil nilai sensor terbaru
 # ----------------------------
@@ -155,19 +120,11 @@ kelembapan = get_latest_value("humidity")
 uv_now = get_latest_value("uv")
 
 # ----------------------------
-# Ambil data historis
-# ----------------------------
-df_suhu = get_historical_data("temperature")
-df_kelembapan = get_historical_data("humidity")
-df_uv = get_historical_data("uv")
-
-# ----------------------------
 # Waktu Sekarang (WIB)
 # ----------------------------
 wib = pytz.timezone('Asia/Jakarta')
 tanggal = datetime.now(wib).strftime("%d %B %Y")
 jam = datetime.now(wib).strftime("%H:%M")
-
 
 # ----------------------------
 # TAMPILAN UTAMA
@@ -202,9 +159,9 @@ with col1:
         if uv_now <= 2:
             image_path = "Sejuk.png"
         elif 3 <= uv_now <= 5:
-            image_path = "Sedang.png"
+            image_path = "sedang.png"
         else:
-            image_path = "Panas banget.png"
+            image_path = "panas banget.png"
     else:
         image_path = "Sejuk.png"
 
