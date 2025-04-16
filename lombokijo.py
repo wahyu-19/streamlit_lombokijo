@@ -168,7 +168,6 @@ wib = pytz.timezone('Asia/Jakarta')
 tanggal = datetime.now(wib).strftime("%d %B %Y")
 jam = datetime.now(wib).strftime("%H:%M")
 
-
 # ----------------------------
 # TAMPILAN UTAMA
 # ----------------------------
@@ -232,7 +231,6 @@ with col2:
     st.markdown(f'<div class="metric-box"><div class="icon">💧</div>{formatted_kelembapan}%</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="metric-box"><div class="icon">☀️</div>{formatted_uv}</div>', unsafe_allow_html=True)
 
-
 # ----------------------------
 # Grafik Historis Sensor (4 data terakhir)
 # ----------------------------
@@ -242,22 +240,22 @@ st.markdown("<div class='big-title' style='font-size:32px;'>📈 Grafik Sensor</
 col1, col2, col3 = st.columns(3)
 
 with col1:
+    st.write(f"Suhu Data: {df_suhu.tail(4)}")  # Debugging: Menampilkan data suhu
     if not df_suhu.empty:
-        df_suhu.set_index('Waktu', inplace=True)
-        st.line_chart(df_suhu.tail(4))  # Gunakan tail() untuk 4 data terakhir
+        st.line_chart(df_suhu.tail(4).set_index("Waktu"))
     else:
         st.warning("Data suhu tidak tersedia.")
 
 with col2:
+    st.write(f"Kelembapan Data: {df_kelembapan.tail(4)}")  # Debugging: Menampilkan data kelembapan
     if not df_kelembapan.empty:
-        df_kelembapan.set_index('Waktu', inplace=True)
-        st.line_chart(df_kelembapan.tail(4))  # Gunakan tail() untuk 4 data terakhir
+        st.line_chart(df_kelembapan.tail(4).set_index("Waktu"))
     else:
         st.warning("Data kelembapan tidak tersedia.")
 
 with col3:
+    st.write(f"UV Data: {df_uv.tail(4)}")  # Debugging: Menampilkan data UV
     if not df_uv.empty:
-        df_uv.set_index('Waktu', inplace=True)
-        st.line_chart(df_uv.tail(4))  # Gunakan tail() untuk 4 data terakhir
+        st.line_chart(df_uv.tail(4).set_index("Waktu"))
     else:
         st.warning("Data UV tidak tersedia.")
