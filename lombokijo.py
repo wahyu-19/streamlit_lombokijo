@@ -7,23 +7,17 @@ from datetime import datetime
 import pytz
 from streamlit_autorefresh import st_autorefresh
 
-# ----------------------------
 # Konfigurasi halaman
-# ----------------------------
 st.set_page_config(
     page_title="Blow n Glow",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# ----------------------------
 # Auto-refresh
-# ----------------------------
 st_autorefresh(interval=60_000, key="refresh")
 
-# ----------------------------
 # Styling CSS responsif
-# ----------------------------
 st.markdown("""
     <style>
     html, body, .main, .block-container {
@@ -32,7 +26,6 @@ st.markdown("""
         background-color: white !important;
         overflow-x: hidden;
     }
-
     .big-title {
         font-size: 64px;
         font-weight: 900;
@@ -40,7 +33,6 @@ st.markdown("""
         margin-bottom: 0.25rem;
         text-align: center;
     }
-
     .description {
         font-size: 18px;
         color: #333;
@@ -49,7 +41,6 @@ st.markdown("""
         text-align: center;
         padding: 0 10px;
     }
-
     .metric-box {
         background-color: white;
         width: 100%;
@@ -69,12 +60,10 @@ st.markdown("""
         margin-left: auto;
         margin-right: auto;
     }
-
     .icon {
         font-size: 36px;
         margin-bottom: 8px;
     }
-
     @media (max-width: 768px) {
         .big-title {
             font-size: 42px;
